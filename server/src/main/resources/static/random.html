@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<script src="scripts/html_gen.js"></script>
+<head>
+    <meta charset="utf-8">
+    <title>MP4D :: Choose Random Tracks </title>
+    <link rel="stylesheet" href="css_folder/general.css">
+    <meta name="description" content="CSS techniques to demonstrate pure CSS tabbed navigation menu" />
+    <meta name="keywords" content="" />
+</head>
+
+<body>
+
+<div id="banner">
+    <h1>MP4D v0.1</h1>
+</div>
+
+<ul id="tabmenu"></ul>
+
+<div id="content">
+
+
+    <table border="0" cellpadding="0" cellspacing="5" width="100%" bgcolor="#000000">
+        <tr><td>
+            <table border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#eaecef">
+                <tr bgcolor="#d1d5d7"><td colspan="7" align="center"><h3>Listen To Random Tracks</h3></td></tr>
+                <tr><td>
+                    <ul id="random_list"></ul>
+                    <table><tr><td><form action="/random/play" method="get">
+                        <input type="submit" name="submit" value="Play" />
+                    </form></td>
+                        <td><form action='/random' method='get'>
+                            <select name="count">
+                                <option value="10">10</option>
+                                <option value="20" selected>20</option>
+                                <option value="40">40</option>
+                                <option value="50">50</option>
+                            </select>
+                            <input type="submit" name="submit" value="Try Again" />
+                            [ <a href="/random_directory.html">Random Directory</a> ]  </form> </td></tr></table>
+                </td></tr>
+            </table>
+        </td></tr>
+    </table>
+
+</div>
+
+</body>
+<script>
+    generate_tabmenu("/random.html");
+    generate_random_list();
+</script>
+</html>
+
+
+

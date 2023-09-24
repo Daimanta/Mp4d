@@ -1,0 +1,9 @@
+{
+  "spring": {
+    "datasource": {
+      "driver-class-name": "org.sqlite.JDBC",
+      "username": "sa",
+      "password": "sa"
+    }
+  }
+}

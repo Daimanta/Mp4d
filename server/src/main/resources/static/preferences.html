@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<script src="scripts/html_gen.js"></script>
+<head>
+    <meta charset="utf-8">
+    <title>MP4D :: /prefs/ </title>
+    <link rel="stylesheet" href="css_folder/general.css">
+    <meta name="description" content="CSS techniques to demonstrate pure CSS tabbed navigation menu" />
+    <meta name="keywords" content="" />
+</head>
+
+<body>
+
+<div id="banner">
+    <h1>MP4D v0.1</h1>
+</div>
+
+<ul id="tabmenu"></ul>
+
+<div id="content">
+
+    <table border="0" cellpadding="0" cellspacing="5" width="100%" bgcolor="#000000">
+        <tr><td>
+            <table border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#eaecef">
+                <tr bgcolor="#d1d5d7"><td colspan="7" align="center"><h3>Preferences</h3></td></tr>
+                <tr><td>
+                    <p>&nbsp;This page allows you to customize your music streaming experience, by changing the type of information which is displayed or changing it's presentation.</p>
+                    <form action='/' method='get'>
+                        <table>
+                            <tr><td valign="top"><b>Available Languages</b></td>
+                                <td valign="top"><ul>
+                                    <li>ba</li>
+                                    <li>de</li>
+                                    <li>en</li>
+                                    <li>es</li>
+                                    <li>fr</li>
+                                </ul>
+                                </td></tr>
+                            <tr><td><b>Sort Order</b></td><td>
+                                <select name="sort_order">
+                                    <option value='$ALBUM'>By Album</option>
+                                    <option value='$TRACK'>By Track number</option>
+                                    <option value='$TITLE'>By Song Title</option>
+                                    <option value='$SIZE'>By File Size</option>
+                                    <option value='$ARTIST $ALBUM'>By Artist and Album</option>
+                                    <option value='$ARTIST'>By Artist</option>
+                                    <option value='$FILEDATE'>By File Modified Time</option>
+                                    <option value='$GENRE'>By Genre</option>
+                                    <option value='$FILENAME'>By Filename</option>
+                                    <option value='$LENGTH'>By Track length</option>
+                                    <option value='$ARTIST $ALBUM $TRACK'>By Artist, Album, Track</option>
+                                </select>
+                            </td></tr>
+                            <tr><td>&nbsp;</td><td>&nbsp;</td></tr>
+                            <tr><td valign="top"><b>Theme</b></td><td>
+                                <input type="radio" name="theme" value="Avalon"   /> Avalon by <a href="http://www.intrepidsoftware.com/">Stan Mulder</a>
+                                <br/><input type="radio" name="theme" value="BlueBox"   /> BlueBox by <a href="http://www.thebrownproject.com/">Aaron Brown</a>
+                                <br/><input type="radio" name="theme" value="Clean"   /> Clean by <a href="http://www.steve.org.uk/">Steve Kemp</a>
+                                <br/><input type="radio" name="theme" value="default"   /> default by <a href="http://www.steve.org.uk/">Steve Kemp</a>
+                                <br/><input type="radio" name="theme" value="dotNET"   /> dotNET by <a href="http://www.marquis-net.de/">MarquiS</a><br/><input type="radio" name="theme" value="handheld"   /> handheld by Sol DeMuth
+                                <br/><input type="radio" name="theme" value="LaFrere"   /> LaFrere by <a href="http://rodolphe.quiedeville.org/">Rodolphe Quiedeville</a>
+                                <br/><input type="radio" name="theme" value="Liquid"   /> Liquid by <a href="http://www.bokko.nl/">Daniel Eiland</a>
+                                <br/><input type="radio" name="theme" value="Musicus"   /> Musicus by <a href="http://jefficus.usask.ca">Jefficus</a>
+                                <br/><input type="radio" name="theme" value="nausicaa"   /> nausicaa by <a href="http://www.noderunner.net/~llin/">Lawrence Lin</a>
+                                <br/><input type="radio" name="theme" value="Nomad"   /> Nomad <br/><input type="radio" name="theme" value="redgrey"   /> redgrey by <a href="http://rodolphe.quiedeville.org/">Rodolphe Quiedeville</a>
+                                <br/><input type="radio" name="theme" value="SchwartzNGrau"   /> SchwartzNGrau by Pat Riehecky
+                                <br/><input type="radio" name="theme" value="simple"   /> simple <br/><input type="radio" name="theme" value="Tabular"  checked='checked' /> Tabular by <a href="http://www.steve.org.uk/">Steve Kemp</a>
+                                <br/><input type="radio" name="theme" value="Thexder"   /> Thexder by <a href="http://www.phildowd.com:4075/">Jeff Hellem</a> &lt;thexder@phildowd.com&gt;
+                                <br/></td></tr>
+
+                            <tr><td>&nbsp;</td><td><input type='submit' value='Set Preferences' /></td></tr>
+                        </table></form>
+
+                </td></tr>
+            </table>
+        </td></tr>
+    </table>
+
+
+
+</div>
+
+</body>
+<script>
+    generate_tabmenu("/preferences.html");
+</script>
+</html>
+
+
+

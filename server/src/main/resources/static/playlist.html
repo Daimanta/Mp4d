@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<script src="scripts/html_gen.js"></script>
+<head>
+    <meta charset="utf-8">
+    <title>MP4D :: Custom Playlists</title>
+    <link rel="stylesheet" href="css_folder/general.css">
+    <li><a href="/random">Random Selection</a></li>
+    <meta name="description" content="CSS techniques to demonstrate pure CSS tabbed navigation menu" />
+    <meta name="keywords" content="" />
+</head>
+
+<body>
+
+<div id="banner">
+    <h1>MP4D v0.1</h1>
+</div>
+
+<ul id="tabmenu"></ul>
+
+<div id="content">
+
+    <table border="0" cellpadding="0" cellspacing="5" width="100%" bgcolor="#000000">
+        <tr><td>
+            <table border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#eaecef">
+                <tr bgcolor="#d1d5d7"><td colspan="7" align="center"><h3>Custom Playlist Generation</h3></td></tr>
+                <tr><td>
+                    <form action="/playlist/">
+                        <input type="hidden" name="play" value="true">
+                        <ul>
+                            <li><input type="checkbox" name="dir0" value="Compilatie"> <a href="/Compilatie/">Compilatie</a> <ul>
+
+                                <li><input type="checkbox" name="dir1" value="Compilatie/Classical%20TOP%20100%20Volume%201"> <a href="/Compilatie/Classical%20TOP%20100%20Volume%201/">Classical TOP 100 Volume 1</a> </li>
+                                <li><input type="checkbox" name="dir2" value="Compilatie/Classical%20TOP%20100%20Volume%202"> <a href="/Compilatie/Classical%20TOP%20100%20Volume%202/">Classical TOP 100 Volume 2</a> </li>
+                                <li><input type="checkbox" name="dir3" value="Compilatie/Classical%20TOP%20100%20Volume%203"> <a href="/Compilatie/Classical%20TOP%20100%20Volume%203/">Classical TOP 100 Volume 3</a> </li>
+                                <li><input type="checkbox" name="dir4" value="Compilatie/Classical%20TOP%20100%20Volume%204"> <a href="/Compilatie/Classical%20TOP%20100%20Volume%204/">Classical TOP 100 Volume 4</a> </li>
+                                <li><input type="checkbox" name="dir5" value="Compilatie/Classical%20TOP%20100%20Volume%205"> <a href="/Compilatie/Classical%20TOP%20100%20Volume%205/">Classical TOP 100 Volume 5</a> </li>
+                                <li><input type="checkbox" name="dir6" value="Compilatie/Classical%20TOP%20100%20Volume%206"> <a href="/Compilatie/Classical%20TOP%20100%20Volume%206/">Classical TOP 100 Volume 6</a> </li>
+                            </ul>
+                        </ul>
+                        <input type="reset" value="Clear All"> <input type="submit" value="Play">
+                    </form>
+                </td></tr>
+            </table>
+        </td></tr>
+    </table>
+
+
+</div>
+
+</body>
+<script>
+    generate_tabmenu("/playlist.html");
+</script>
+</html>
+
+
+

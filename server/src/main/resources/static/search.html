@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<script src="scripts/html_gen.js"></script>
+<head>
+    <meta charset="utf-8">
+    <title>MP4D :: /search/ </title>
+    <link rel="stylesheet" href="css_folder/general.css">
+    <meta name="description" content="CSS techniques to demonstrate pure CSS tabbed navigation menu" />
+    <meta name="keywords" content="" />
+</head>
+
+<body onLoad="document.forms.searchform.q.focus();">
+
+<div id="banner">
+    <h1>MP4D v0.1</h1>
+</div>
+
+<ul id="tabmenu"></ul>
+
+<div id="content">
+
+
+    <form action="/search/" method="get">
+        <table border="0" cellpadding="0" cellspacing="5" width="100%" bgcolor="#000000">
+            <tr><td>
+                <table border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#eaecef">
+                    <tr><td colspan="2" align="center"><b>Search Archive For Music</b></td></tr>
+                    <tr><td>&nbsp;</td><td>&nbsp;</td></tr>
+                    <tr><td align="right">Search Terms:</td><td align="left"><input type="text" name="q" size="40" /></td></tr>
+                    <tr><td align="right">Search for:</td><td align="left">
+                        <input type="radio" name="type" value="all" checked> All Terms
+                        <input type="radio" name="type" value="any"> Any Terms
+                    </td></tr>
+                    <tr><td align="right">Search artist:</td><td align="left"><input type="text" name="artist" size="40" /></td></tr>
+                    <tr><td align="right">Search album:</td><td align="left"><input type="text" name="album" size="40" /></td></tr>
+                    <tr><td align="right">Search song:</td><td align="left"><input type="text" name="title" size="40" /></td></tr>
+                    <tr><td align="right">Search year:</td><td align="left"><input type="text" name="year" size="40" /></td></tr>
+                    <tr><td align="right">Start Directory:</td><td align="left"><select name="dir">
+                        <option value="" selected>All Directories</option>
+                        <option value="/Compilatie">Compilatie</option>
+                    </select>
+                    </td></tr><tr><td align="right">Genres:</td><td align="left"><select name="genre">
+                    <option value="" selected>All Genres</option>
+                    <option value="Acid">Acid</option>
+                    <option value="Acid Jazz">Acid Jazz</option>
+                    <option value="Acid Punk">Acid Punk</option>
+                    <option value="AlternRock">AlternRock</option>
+                    <option value="Alternative">Alternative</option>
+                    <option value="Ambient">Ambient</option>
+                    <option value="Bass">Bass</option>
+                    <option value="Blues">Blues</option>
+                    <option value="Cabaret">Cabaret</option>
+                    <option value="Christian Rap">Christian Rap</option>
+                    <option value="Classic Rock">Classic Rock</option>
+                    <option value="Classical">Classical</option>
+                    <option value="Comedy">Comedy</option>
+                    <option value="Country">Country</option>
+                    <option value="Cult">Cult</option>
+                    <option value="Dance">Dance</option>
+                    <option value="Darkwave">Darkwave</option>
+                    <option value="Death Metal">Death Metal</option>
+                    <option value="Disco">Disco</option>
+                    <option value="Dream">Dream</option>
+                    <option value="Electronic">Electronic</option>
+                    <option value="Ethnic">Ethnic</option>
+                    <option value="Euro-Techno">Euro-Techno</option>
+                    <option value="Eurodance">Eurodance</option>
+                    <option value="Funk">Funk</option>
+                    <option value="Fusion">Fusion</option>
+                    <option value="Game">Game</option>
+                    <option value="Gangsta">Gangsta</option>
+                    <option value="Gospel">Gospel</option>
+                    <option value="Gothic">Gothic</option>
+                    <option value="Grunge">Grunge</option>
+                    <option value="Hard Rock">Hard Rock</option>
+                    <option value="Hip-Hop">Hip-Hop</option>
+                    <option value="House">House</option>
+                    <option value="Industrial">Industrial</option>
+                    <option value="Instrumental">Instrumental</option>
+                    <option value="Instrumental Pop">Instrumental Pop</option>
+                    <option value="Instrumental Rock">Instrumental Rock</option>
+                    <option value="Jazz">Jazz</option>
+                    <option value="Jazz+Funk">Jazz+Funk</option>
+                    <option value="Jungle">Jungle</option>
+                    <option value="Lo-Fi">Lo-Fi</option>
+                    <option value="Meditative">Meditative</option>
+                    <option value="Metal">Metal</option>
+                    <option value="Musical">Musical</option>
+                    <option value="Native American">Native American</option>
+                    <option value="New Age">New Age</option>
+                    <option value="New Wave">New Wave</option>
+                    <option value="Noise">Noise</option>
+                    <option value="Oldies">Oldies</option>
+                    <option value="Other">Other</option>
+                    <option value="Polka">Polka</option>
+                    <option value="Pop">Pop</option>
+                    <option value="Pop-Folk">Pop-Folk</option>
+                    <option value="Pop/Funk">Pop/Funk</option>
+                    <option value="Pranks">Pranks</option>
+                    <option value="Psychadelic">Psychadelic</option>
+                    <option value="Punk">Punk</option>
+                    <option value="R&amp;B">R&amp;B</option>
+                    <option value="Rap">Rap</option>
+                    <option value="Rave">Rave</option>
+                    <option value="Reggae">Reggae</option>
+                    <option value="Retro">Retro</option>
+                    <option value="Rock">Rock</option>
+                    <option value="Rock &amp; Roll">Rock &amp; Roll</option>
+                    <option value="Showtunes">Showtunes</option>
+                    <option value="Ska">Ska</option>
+                    <option value="Soul">Soul</option>
+                    <option value="Sound Clip">Sound Clip</option>
+                    <option value="Soundtrack">Soundtrack</option>
+                    <option value="Southern Rock">Southern Rock</option>
+                    <option value="Space">Space</option>
+                    <option value="Techno">Techno</option>
+                    <option value="Techno-Industrial">Techno-Industrial</option>
+                    <option value="Top 40">Top 40</option>
+                    <option value="Trailer">Trailer</option>
+                    <option value="Trance">Trance</option>
+                    <option value="Tribal">Tribal</option>
+                    <option value="Trip-Hop">Trip-Hop</option>
+                    <option value="Vocal">Vocal</option>
+                </select>
+                </td></tr><tr><td align="right">Play Results:</td><td align="left">
+                    <input type="radio" name="play" value="0" checked> No
+                    <input type="radio" name="play" value="1"> Yes
+                </td></tr>
+                    <tr><td>&nbsp;</td><td>&nbsp;</td></tr>
+                    <tr><td>&nbsp;</td><td><input type="submit" /></td></tr>
+                    <tr><td>&nbsp;</td><td>&nbsp;</td></tr>
+                </table>
+            </td></tr>
+        </table>
+    </form>
+
+
+</div>
+
+</body>
+<script>
+    generate_tabmenu("/search.html");
+</script>
+</html>
+
+

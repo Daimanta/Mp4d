@@ -1,0 +1,4 @@
+/.gradle/
+/.idea/
+/sample.db
+/server/build/

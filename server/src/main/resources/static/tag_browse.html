@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<script src="scripts/html_gen.js"></script>
+<head>
+       <meta charset="utf-8">
+       <title>MP4D :: Browse by Tag</title>
+       <link rel="stylesheet" href="css_folder/general.css">
+       <meta name="description" content="CSS techniques to demonstrate pure CSS tabbed navigation menu" />
+       <meta name="keywords" content="" />
+</head>
+
+<body>
+
+<div id="banner">
+<h1>MP4D v0.1</h1>
+</div>
+
+<ul id="tabmenu"></ul>
+
+<div id="content">
+
+
+<table border="0" cellpadding="0" cellspacing="5" width="100%" bgcolor="#000000">
+<tr><td>
+<table border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#eaecef">
+<tr bgcolor="#d1d5d7"><td colspan="7" align="center"><h3>Browse Archive</h3></td></tr>
+<tr><td>
+<tr><td colspan=3 align='left'><a href='/tagbrowse/artist'>Browse by artist</a></td></tr>
+       <tr><td colspan=3 align='left'><a href='/tagbrowse/album'>Browse by album</a></td></tr>
+       <tr><td colspan=3 align='left'><a href='/tagbrowse/year'>Browse by year</a></td></tr>
+       <tr><td colspan=3 align='left'><a href='/tagbrowse/genre'>Browse by genre</a></td></tr></td></tr>
+</table>
+</td></tr>
+</table>
+
+</div>
+
+</body>
+<script>
+       generate_tabmenu("/tag_browse.html");
+</script>
+</html>
+
+
+
