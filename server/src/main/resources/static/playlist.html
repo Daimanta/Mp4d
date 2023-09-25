@@ -27,17 +27,7 @@
                 <tr><td>
                     <form action="/playlist/">
                         <input type="hidden" name="play" value="true">
-                        <ul>
-                            <li><input type="checkbox" name="dir0" value="Compilatie"> <a href="/Compilatie/">Compilatie</a> <ul>
-
-                                <li><input type="checkbox" name="dir1" value="Compilatie/Classical%20TOP%20100%20Volume%201"> <a href="/Compilatie/Classical%20TOP%20100%20Volume%201/">Classical TOP 100 Volume 1</a> </li>
-                                <li><input type="checkbox" name="dir2" value="Compilatie/Classical%20TOP%20100%20Volume%202"> <a href="/Compilatie/Classical%20TOP%20100%20Volume%202/">Classical TOP 100 Volume 2</a> </li>
-                                <li><input type="checkbox" name="dir3" value="Compilatie/Classical%20TOP%20100%20Volume%203"> <a href="/Compilatie/Classical%20TOP%20100%20Volume%203/">Classical TOP 100 Volume 3</a> </li>
-                                <li><input type="checkbox" name="dir4" value="Compilatie/Classical%20TOP%20100%20Volume%204"> <a href="/Compilatie/Classical%20TOP%20100%20Volume%204/">Classical TOP 100 Volume 4</a> </li>
-                                <li><input type="checkbox" name="dir5" value="Compilatie/Classical%20TOP%20100%20Volume%205"> <a href="/Compilatie/Classical%20TOP%20100%20Volume%205/">Classical TOP 100 Volume 5</a> </li>
-                                <li><input type="checkbox" name="dir6" value="Compilatie/Classical%20TOP%20100%20Volume%206"> <a href="/Compilatie/Classical%20TOP%20100%20Volume%206/">Classical TOP 100 Volume 6</a> </li>
-                            </ul>
-                        </ul>
+                        <ul id="playlist_id"></ul>
                         <input type="reset" value="Clear All"> <input type="submit" value="Play">
                     </form>
                 </td></tr>
@@ -51,6 +41,7 @@
 </body>
 <script>
     generate_tabmenu("/playlist.html");
+    generate_custom_playlist();
 </script>
 </html>
 

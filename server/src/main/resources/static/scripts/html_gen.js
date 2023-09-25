@@ -1,14 +1,27 @@
 
+class DirectoryTree {
+    name;
+    directoryTrees;
+    constructor(name, directoryTrees) {
+        this.name = name;
+        this.directoryTrees = directoryTrees;
+    }
+
+    isLeaf() {
+        return this.directoryTrees == null || this.directoryTrees.length === 0;
+    }
+}
+
 function generate_tabmenu(this_url) {
     const tabs = [
         ["/index.html", "Music"],
-        ["/tag_browse.html", "Browse by tag"],
+        ["/tag_browse/tag_browse.html", "Browse by tag"],
         ["/playlist.html", "Custom Playlist"],
         ["/random.html", "Random Selection"],
         ["/random_directory.html", "Random Directory"],
         ["/preferences.html", "Preferences"],
         ["/search.html", "Search"],
-        ["/statistics.html", "Statistics"],
+        ["/statistics/statistics.html", "Statistics"],
         ["/extras.html", "Extras"]
     ];
     const top = document.getElementById("tabmenu");
@@ -109,7 +122,6 @@ function generate_songs_list() {
 }
 
 function generate_random_list() {
-    //<li>[<a href="/Classical%20TOP%20100%20Volume%202/" title="Visit the directory containing this track.">+</a>] &middot; <a href="/Classical%20TOP%20100%20Volume%202/02.%20Charles%20Gounod%20-%20Faust%20Waltz.mp3.m3u">02. Charles Gounod - Faust Waltz</a></li>
     const songs = [
         ["/my/link/foo.mp3", "02. Example Song", "Folder link"]
     ];
@@ -123,6 +135,69 @@ function generate_random_list() {
         table.appendChild(li);
     }
 }
+
+function generate_random_directory() {
+    const songs = [
+        ["/my/link/foo.mp3", "02. Example Song"]
+    ];
+    const table = document.getElementById("random_list_id");
+    for (let song of songs) {
+        const tr = document.createElement("tr");
+
+        const empty = document.createElement("td");
+        empty.width = "10%";
+        empty.textContent = " ";
+        tr.appendChild(empty);
+
+        const name = document.createElement("td");
+        const name_link = document.createElement("a");
+        name_link.href = song[0];
+        name_link.textContent = song[1];
+        name.appendChild(name_link);
+        tr.appendChild(name);
+
+        const download = document.createElement("td");
+        download.align = "right";
+        download.appendChild(document.createTextNode("["));
+        download.appendChild(getLink("my_link", "Info"));
+        download.appendChild(document.createTextNode("] ["));
+        download.appendChild(getLink("my_link_2", "Download"));
+        download.appendChild(document.createTextNode("]"));
+        tr.appendChild(download);
+
+        table.appendChild(tr);
+    }
+}
+
+function generate_custom_playlist() {
+    const tree = new DirectoryTree("Main dir", [new DirectoryTree("Subdirectory 1", null), new DirectoryTree("Subdirectory 2", null)]);
+    const table = document.getElementById("playlist_id");
+    addElement(table, tree);
+}
+
+function addElement(parent, directoryTree) {
+    const list = document.createElement("li");
+
+    const checkbox = document.createElement("input");
+    checkbox.type="checkbox";
+    list.appendChild(checkbox);
+
+    const link = document.createElement("a");
+    link.href=directoryTree.name;
+    link.textContent=directoryTree.name;
+    list.appendChild(link);
+
+    if (!directoryTree.isLeaf()) {
+        const subList = document.createElement("ul");
+        for (let child of directoryTree.directoryTrees) {
+            addElement(subList, child);
+        }
+        list.appendChild(subList);
+    }
+
+    parent.appendChild(list);
+}
+
 
 function getLink(link, text) {
     const result = document.createElement("a");
