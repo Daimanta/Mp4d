@@ -28,19 +28,20 @@ public class SongService {
         return songRepository.findById(uuid);
     }
 
-    public Optional<Song> getMatchingSong(Path path) {
+    public Optional<Song> getMatchingSong(String absoluteBasePath, Path path) {
         FileInformation fileInformation = new FileInformation(path);
-        return getMatchingSong(fileInformation);
+        return getMatchingSong(absoluteBasePath, fileInformation);
     }
 
-    public Optional<Song> getMatchingSong(FileInformation fileInformation) {
-        return songRepository.findByFolderPathAndName(fileInformation.directory, fileInformation.fileName);
+    public Optional<Song> getMatchingSong(String absoluteBasePath, FileInformation fileInformation) {
+        return songRepository.findByFolderPathAndName(stripPrefix(absoluteBasePath, fileInformation.directory), fileInformation.fileName);
     }
 
     public Optional<Folder> getMatchingFolder(String relativeDirectory) {
         return folderRepository.findByPath(relativeDirectory);
     }
 
+    @Transactional(Transactional.TxType.REQUIRES_NEW)
     public boolean upsertFolder(String absoluteBasePath, Path path) {
         String absoluteFolderPath = path.toAbsolutePath().toString();
         String relativeFolderPath = stripPrefix(absoluteBasePath, absoluteFolderPath);
@@ -56,11 +57,12 @@ public class SongService {
         return "/";
     }
 
-    public boolean upsertSong(Path path) {
+    @Transactional(Transactional.TxType.REQUIRES_NEW)
+    public boolean upsertSong(String absoluteBasePath, Path path) {
         FileInformation fileInformation = new FileInformation(path);
-        Optional<Song> songOpt = getMatchingSong(fileInformation);
+        Optional<Song> songOpt = getMatchingSong(absoluteBasePath, fileInformation);
         if (songOpt.isEmpty()) {
-            Folder folder = getMatchingFolder(fileInformation.directory).orElseThrow(() -> new RuntimeException());
+            Folder folder = getMatchingFolder(stripPrefix(absoluteBasePath, fileInformation.directory)).orElseThrow(() -> new RuntimeException());
             Song song = new Song(folder, fileInformation.fileName);
             songRepository.save(song);
             return true;
