@@ -87,15 +87,24 @@ function generate_subdirectories() {
     }
 }
 
-function generate_songs_list() {
-    const songs = [
-        ["/my/link/foo.mp3", "02. Example Song"]
-    ];
+function generate_index_lists(id) {
+    const fetch_string = id ? 'api/v1/folder?id=' + id : 'api/v1/folder'
+    fetch(fetch_string).then(
+        async (response)=> {
+            const data = await response.json();
+            const songs = data.songs;
+            const dirs = data.subFolders;
+            process_songs_list(songs);
+            process_dir_lists(dirs);
+        }
+    )
+}
 
+function process_songs_list(songs) {
     const table = document.getElementById("song_list");
+    table.replaceChildren();
     for (let song of songs) {
         const tr = document.createElement("tr");
-
         const empty = document.createElement("td");
         empty.width = "10%";
         empty.textContent = " ";
@@ -103,8 +112,8 @@ function generate_songs_list() {
 
         const name = document.createElement("td");
         const name_link = document.createElement("a");
-        name_link.href = song[0];
-        name_link.textContent = song[1];
+        name_link.href = song.uuid;
+        name_link.textContent = song.name;
         name.appendChild(name_link);
         tr.appendChild(name);
 
@@ -116,6 +125,46 @@ function generate_songs_list() {
         download.appendChild(getLink("my_link_2", "Download"));
         download.appendChild(document.createTextNode("]"));
         tr.appendChild(download);
+
+        table.appendChild(tr);
+    }
+}
+
+function process_dir_lists(dirs) {
+    const table = document.getElementById("dir_list");
+    table.replaceChildren();
+    for (let directory of dirs) {
+        const tr = document.createElement("tr");
+
+        const nbsp = document.createElement("td");
+        nbsp.width = "10%";
+        nbsp.textContent = " ";
+        tr.appendChild(nbsp);
+
+        const name = document.createElement("td");
+        const name_link = document.createElement("a");
+        name_link.href = "#";
+        name_link.textContent = directory.name;
+        name_link.addEventListener('click', () => {
+            generate_index_lists(directory.id);
+        });
+        name.appendChild(name_link);
+        tr.appendChild(name);
+
+        const content = document.createElement("td")
+        content.textContent = "" + directory.songs + " songs";
+        tr.appendChild(content);
+
+        tr.appendChild(document.createElement("td")); // Empty td for lining out columns
+
+        const play = document.createElement("td");
+        play.appendChild(document.createTextNode("["));
+        const play_link = document.createElement("a");
+        play_link.textContent = "Play";
+        play_link.href = directory[0];
+        play.appendChild(play_link);
+        play.appendChild(document.createTextNode("]"));
+        tr.appendChild(play);
 
         table.appendChild(tr);
     }

@@ -1,9 +1,11 @@
 CREATE TABLE folder (
     id integer not null primary key autoincrement,
-    path varchar(255) not null
+    path varchar(255) not null,
+    parent_id integer references folder(id)
 );
 
 CREATE INDEX folder_path_idx ON folder(path);
+CREATE INDEX folder_parent_idx ON folder(parent_id);
 
 CREATE TABLE song (
     uuid varchar(36) not null primary key,

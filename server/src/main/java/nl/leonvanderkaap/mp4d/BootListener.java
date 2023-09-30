@@ -16,7 +16,7 @@ import java.util.List;
 public class BootListener {
 
     private final SongDatabaseBuilder songDatabaseBuilder;
-    
+
     @EventListener
     public void buildDatabase(ApplicationStartedEvent event) throws IOException {
         songDatabaseBuilder.buildDatabase();

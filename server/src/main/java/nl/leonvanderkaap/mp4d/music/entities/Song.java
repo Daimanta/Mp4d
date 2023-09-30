@@ -25,6 +25,6 @@ public class Song {
     }
 
     public String getRelativePath() {
-        return folder + name;
+        return folder.getPath() + name;
     }
 }

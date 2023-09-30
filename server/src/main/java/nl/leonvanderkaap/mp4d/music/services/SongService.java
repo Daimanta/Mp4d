@@ -11,6 +11,7 @@ import nl.leonvanderkaap.mp4d.music.entities.SongRepository;
 import org.springframework.stereotype.Service;
 
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -28,6 +29,14 @@ public class SongService {
         return songRepository.findById(uuid);
     }
 
+    public Optional<Folder> getById(Integer id) {
+        if (id == null) {
+            return folderRepository.findByPath("/");
+        } else {
+            return folderRepository.findById(id);
+        }
+    }
+
     public Optional<Song> getMatchingSong(String absoluteBasePath, Path path) {
         FileInformation fileInformation = new FileInformation(path);
         return getMatchingSong(absoluteBasePath, fileInformation);
@@ -42,33 +51,27 @@ public class SongService {
     }
 
     @Transactional(Transactional.TxType.REQUIRES_NEW)
-    public boolean upsertFolder(String absoluteBasePath, Path path) {
+    public Folder upsertFolder(String absoluteBasePath, Path path) {
         String absoluteFolderPath = path.toAbsolutePath().toString();
         String relativeFolderPath = stripPrefix(absoluteBasePath, absoluteFolderPath);
         Optional<Folder> folderOpt = getMatchingFolder(relativeFolderPath);
-        if (folderOpt.isPresent()) return false;
-        folderRepository.save(new Folder(relativeFolderPath));
-        return true;
+        if (folderOpt.isPresent()) {
+            return folderOpt.get();
+        }
+
+        Folder parent = null;
+        if (!relativeFolderPath.equals("/")) {
+            String relativeParentPath = stripPrefix(absoluteBasePath, path.getParent().toAbsolutePath().toString());
+            parent = getMatchingFolder(relativeParentPath).get();
+        }
+        Folder folder = new Folder(relativeFolderPath, parent);
+        return folderRepository.save(folder);
     }
 
     public String stripPrefix(String absoluteBasePath, String absolutePath) {
         String subString = absolutePath.substring(absoluteBasePath.length());
         if (!subString.isEmpty()) return subString.replaceAll("\\\\", "/");
         return "/";
-    }
-
-    @Transactional(Transactional.TxType.REQUIRES_NEW)
-    public boolean upsertSong(String absoluteBasePath, Path path) {
-        FileInformation fileInformation = new FileInformation(path);
-        Optional<Song> songOpt = getMatchingSong(absoluteBasePath, fileInformation);
-        if (songOpt.isEmpty()) {
-            Folder folder = getMatchingFolder(stripPrefix(absoluteBasePath, fileInformation.directory)).orElseThrow(() -> new RuntimeException());
-            Song song = new Song(folder, fileInformation.fileName);
-            songRepository.save(song);
-            return true;
-        } else {
-            return false;
-        }
     }
 
     private class FileInformation {
