@@ -4,6 +4,16 @@
       "driver-class-name": "org.sqlite.JDBC",
       "username": "sa",
       "password": "sa"
+    },
+    "jpa": {
+      "properties": {
+        "hibernate": {
+          "hbm2ddl": {
+            "auto": "validate"
+          }
+        }
+      },
+      "database-platform": "org.hibernate.community.dialect.SQLiteDialect"
     }
   }
 }

@@ -10,5 +10,5 @@ import org.springframework.context.annotation.Configuration;
 @Getter
 @Setter
 public class ApplicationSettings {
-    private String basePath;
+    private String basepath;
 }

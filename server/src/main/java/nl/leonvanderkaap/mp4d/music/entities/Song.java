@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 @Entity
 @Getter
 @NoArgsConstructor
@@ -12,10 +14,17 @@ public class Song {
     @Id
     private String uuid;
 
-    private String folderPath;
+    @ManyToOne(optional = false)
+    private Folder folder;
     private String name;
 
+    public Song(Folder folder, String name) {
+        this.uuid = UUID.randomUUID().toString();
+        this.folder = folder;
+        this.name = name;
+    }
+
     public String getRelativePath() {
-        return folderPath + name;
+        return folder + name;
     }
 }
