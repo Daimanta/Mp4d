@@ -96,6 +96,7 @@ function generate_index_lists(id) {
             const dirs = data.subFolders;
             process_songs_list(songs);
             process_dir_lists(dirs);
+            add_breadcrumbs(data);
         }
     )
 }
@@ -168,6 +169,10 @@ function process_dir_lists(dirs) {
 
         table.appendChild(tr);
     }
+}
+
+function add_breadcrumbs(data) {
+    console.log(data);
 }
 
 function generate_random_list() {

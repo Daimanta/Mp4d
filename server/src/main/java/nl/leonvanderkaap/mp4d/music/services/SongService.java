@@ -4,6 +4,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import nl.leonvanderkaap.mp4d.commons.ApplicationSettings;
+import nl.leonvanderkaap.mp4d.commons.exceptions.BadRequestException;
 import nl.leonvanderkaap.mp4d.music.entities.Folder;
 import nl.leonvanderkaap.mp4d.music.entities.FolderRepository;
 import nl.leonvanderkaap.mp4d.music.entities.Song;
@@ -11,7 +12,9 @@ import nl.leonvanderkaap.mp4d.music.entities.SongRepository;
 import org.springframework.stereotype.Service;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -29,12 +32,22 @@ public class SongService {
         return songRepository.findById(uuid);
     }
 
-    public Optional<Folder> getById(Integer id) {
+    public Optional<Folder> getFolderById(Integer id) {
         if (id == null) {
             return folderRepository.findByPath("/");
         } else {
             return folderRepository.findById(id);
         }
+    }
+
+    public List<Song> getSongsByIds(List<String> ids) {
+        if (ids == null || ids.isEmpty()) return new ArrayList<>();
+        if (ids.stream().anyMatch(Objects::isNull)) {
+            throw new BadRequestException("Some ids are null");
+        }
+        List<Song> result = this.songRepository.findAllById(ids).stream().toList();
+        if (result.size() < ids.size()) throw new BadRequestException("Some ids are not found");
+        return result;
     }
 
     public Optional<Song> getMatchingSong(String absoluteBasePath, Path path) {
