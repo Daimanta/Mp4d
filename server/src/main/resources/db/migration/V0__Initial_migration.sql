@@ -10,7 +10,11 @@ CREATE INDEX folder_parent_idx ON folder(parent_id);
 CREATE TABLE song (
     uuid varchar(36) not null primary key,
     folder_id integer not null references folder(id),
-    name varchar(255) not null
+    name varchar(255) not null,
+    bitrate integer,
+    length integer,
+    mtime integer,
+    size integer not null
 );
 
 CREATE INDEX song_folder_idx ON song(folder_id);

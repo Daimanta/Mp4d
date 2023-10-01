@@ -8,8 +8,16 @@ import nl.leonvanderkaap.mp4d.music.entities.Folder;
 import nl.leonvanderkaap.mp4d.music.entities.FolderRepository;
 import nl.leonvanderkaap.mp4d.music.entities.Song;
 import nl.leonvanderkaap.mp4d.music.entities.SongRepository;
+import org.jaudiotagger.audio.AudioFile;
+import org.jaudiotagger.audio.AudioFileIO;
+import org.jaudiotagger.audio.AudioHeader;
+import org.jaudiotagger.audio.exceptions.CannotReadException;
+import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
+import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
+import org.jaudiotagger.tag.TagException;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileVisitResult;
 import java.nio.file.FileVisitor;
@@ -132,7 +140,23 @@ public class SongDatabaseBuilder {
         }
 
         if (matched == null) {
-            Song song = new Song(folder, fileInformation.getFileName());
+            File file = path.toFile();
+            Integer bitrate = null;
+            Integer length = null;
+            Integer mtime = null;
+            int size = (int) file.length();
+            try {
+                AudioFile audioFile = AudioFileIO.read(path.toFile());
+                AudioHeader header = audioFile.getAudioHeader();
+                bitrate = (int) header.getBitRateAsNumber();
+                length = header.getTrackLength();
+                mtime = 0;
+            } catch (CannotReadException e) {
+                throw new RuntimeException(e);
+            } catch (IOException|TagException|ReadOnlyFileException|InvalidAudioFrameException e) {
+                throw new RuntimeException(e);
+            }
+            Song song = new Song(folder, fileInformation.getFileName(), bitrate, length, mtime, size);
             songRepository.save(song);
             return true;
         } else {

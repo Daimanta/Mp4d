@@ -7,10 +7,12 @@ import nl.leonvanderkaap.mp4d.commons.exceptions.NotFoundException;
 import nl.leonvanderkaap.mp4d.music.controllers.dtos.FolderDetailsReadDto;
 import nl.leonvanderkaap.mp4d.music.entities.Song;
 import nl.leonvanderkaap.mp4d.music.services.SongService;
+import org.flywaydb.core.internal.util.IOUtils;
 import org.springframework.http.MediaType;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
 
+import javax.sound.sampled.AudioSystem;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,13 +31,17 @@ public class SongController {
         return new FolderDetailsReadDto(songService.getById(id).orElseThrow(() -> new NotFoundException("Folder not found")));
     }
 
-    @GetMapping("/{id}")
-    public void getMusic(@PathVariable("id") String id, HttpServletResponse response) throws IOException {
+    @GetMapping(value = "/directplay/{id}", produces = "audio/mpeg")
+    public byte[] getMusic(@PathVariable("id") String id, HttpServletResponse response) throws IOException {
         Song song = songService.getByUuid(id).orElseThrow(() -> new NotFoundException("Song not found"));
-        response.setContentType("audio/mpeg");
         String path = applicationSettings.getBasepath() + song.getRelativePath();
+        response.setHeader("Content-Disposition", "attachment; filename="+song.getName());
         InputStream is = new FileInputStream(path);
-        FileCopyUtils.copy(is, response.getOutputStream());
-        response.getOutputStream().close();
+        return is.readAllBytes();
+    }
+
+    @GetMapping("/songplaylist/{id}")
+    public void getSingularSongPlaylist(@PathVariable("id") String id) {
+
     }
 }

@@ -112,7 +112,7 @@ function process_songs_list(songs) {
 
         const name = document.createElement("td");
         const name_link = document.createElement("a");
-        name_link.href = song.uuid;
+        name_link.href = "api/v1/songplaylist/"+song.uuid;
         name_link.textContent = song.name;
         name.appendChild(name_link);
         tr.appendChild(name);
@@ -122,7 +122,7 @@ function process_songs_list(songs) {
         download.appendChild(document.createTextNode("["));
         download.appendChild(getLink("my_link", "Info"));
         download.appendChild(document.createTextNode("] ["));
-        download.appendChild(getLink("my_link_2", "Download"));
+        download.appendChild(getLink("api/v1/directplay/" + song.uuid, "Download"));
         download.appendChild(document.createTextNode("]"));
         tr.appendChild(download);
 
