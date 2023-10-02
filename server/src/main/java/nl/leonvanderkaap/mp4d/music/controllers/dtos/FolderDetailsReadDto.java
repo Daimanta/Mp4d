@@ -7,11 +7,13 @@ import java.util.List;
 @Getter
 public class FolderDetailsReadDto {
 
+    private int id;
     private String name;
     private List<SongReferenceReadDto> songs;
     private List<FolderReferenceReadDto> subFolders;
 
     public FolderDetailsReadDto(Folder folder) {
+        this.id = folder.getId();
         this.name = folder.getFolderName();
         this.songs = folder.getSongs().stream().map(SongReferenceReadDto::new).toList();
         this.subFolders = folder.getSubFolders().stream().map(FolderReferenceReadDto::new).toList();

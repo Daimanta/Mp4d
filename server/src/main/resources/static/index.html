@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+<script src="scripts/index.js"></script>
 <script src="scripts/html_gen.js"></script>
 <head>
     <meta charset="utf-8">
@@ -18,7 +19,7 @@
 <div id="content">
 
     <p style="text-align:center">
-        [ <a href="/">Home</a> | <a href="/recurse.m3u">Play</a> ]</p>
+        [ <span id="breadcrumb_parent_id"></span> | <a id="current_playlist_ref" href="/recurse.m3u">Play</a> ]</p>
 
 
     <table border="0" cellpadding="0" cellspacing="5" width="100%" bgcolor="#000000">
@@ -54,7 +55,8 @@
 </body>
 <script>
     generate_tabmenu("/index.html");
-    generate_index_lists();
+    visit_subfolder(null);
+    update_breadcrumbs();
 </script>
 </html>
 

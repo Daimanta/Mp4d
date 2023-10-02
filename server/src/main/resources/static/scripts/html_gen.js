@@ -87,7 +87,7 @@ function generate_subdirectories() {
     }
 }
 
-function generate_index_lists(id) {
+function visit_subfolder(id) {
     const fetch_string = id ? 'api/v1/folder?id=' + id : 'api/v1/folder'
     fetch(fetch_string).then(
         async (response)=> {
@@ -96,7 +96,23 @@ function generate_index_lists(id) {
             const dirs = data.subFolders;
             process_songs_list(songs);
             process_dir_lists(dirs);
-            add_breadcrumbs(data);
+            if (id) {
+                add_breadcrumb({"name": data.name, "id": data.id});
+            }
+        }
+    )
+}
+
+function navigate_breadcrumb(id, index) {
+    const fetch_string = id ? 'api/v1/folder?id=' + id : 'api/v1/folder'
+    fetch(fetch_string).then(
+        async (response)=> {
+            const data = await response.json();
+            const songs = data.songs;
+            const dirs = data.subFolders;
+            process_songs_list(songs);
+            process_dir_lists(dirs);
+            trim_breadcrumbs(index);
         }
     )
 }
@@ -147,7 +163,7 @@ function process_dir_lists(dirs) {
         name_link.href = "#";
         name_link.textContent = directory.name;
         name_link.addEventListener('click', () => {
-            generate_index_lists(directory.id);
+            visit_subfolder(directory.id);
         });
         name.appendChild(name_link);
         tr.appendChild(name);
@@ -171,9 +187,6 @@ function process_dir_lists(dirs) {
     }
 }
 
-function add_breadcrumbs(data) {
-    console.log(data);
-}
 
 function generate_random_list() {
     const songs = [
