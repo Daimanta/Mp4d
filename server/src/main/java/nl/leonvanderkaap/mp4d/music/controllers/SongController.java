@@ -5,6 +5,8 @@ import lombok.RequiredArgsConstructor;
 import nl.leonvanderkaap.mp4d.commons.ApplicationSettings;
 import nl.leonvanderkaap.mp4d.commons.exceptions.NotFoundException;
 import nl.leonvanderkaap.mp4d.music.controllers.dtos.FolderDetailsReadDto;
+import nl.leonvanderkaap.mp4d.music.controllers.dtos.SongReferenceReadDto;
+import nl.leonvanderkaap.mp4d.music.controllers.dtos.SongWithFolderReferenceReadDto;
 import nl.leonvanderkaap.mp4d.music.entities.Song;
 import nl.leonvanderkaap.mp4d.music.services.PlaylistBuilderService;
 import nl.leonvanderkaap.mp4d.music.services.SongService;
@@ -15,6 +17,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -50,10 +53,15 @@ public class SongController {
     }
 
     @GetMapping(value = "/folderplaylist/{id}", produces = MediaType.TEXT_PLAIN_VALUE)
-    public byte[] getFolderPlaylist(@PathVariable("id") int id, HttpServletResponse response) {
+    public byte[] getFolderPlaylist(@PathVariable(name = "id", required = false) Integer id, HttpServletResponse response) {
         String playlistContent = playlistBuilderService.buildFolderPlaylist(id);
         byte[] result = playlistContent.getBytes(StandardCharsets.UTF_8);
-        response.setHeader("Content-Disposition", "filename="+id+".m3u8");
+        response.setHeader("Content-Disposition", "attachment; filename="+id+".m3u8");
         return result;
+    }
+
+    @GetMapping("/random")
+    public List<SongWithFolderReferenceReadDto> getRandomSongs() {
+        return songService.getRandomSongs(20).stream().map(SongWithFolderReferenceReadDto::new).toList();
     }
 }

@@ -2,13 +2,19 @@ let breadCrumbs = [{"name": "Home", "id": null, "index": 0}];
 
 function update_breadcrumbs() {
     const parent = document.getElementById("breadcrumb_parent_id");
+    const lower_parent = document.getElementById("lower_breadcrumb_parent_id");
+    update_breadcrumb_element(parent);
+    update_breadcrumb_element(lower_parent);
+}
+
+function update_breadcrumb_element(parent) {
     parent.replaceChildren();
     let first = true;
     for (let crumb of breadCrumbs) {
         if (first) {
             first = false;
         } else {
-            parent.appendChild(document.createTextNode(" * "));
+            parent.appendChild(document.createTextNode(" · "));
         }
         const link = document.createElement("a");
         link.href = "#";

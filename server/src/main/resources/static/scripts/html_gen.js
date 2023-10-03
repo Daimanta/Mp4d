@@ -113,8 +113,22 @@ function navigate_breadcrumb(id, index) {
             process_songs_list(songs);
             process_dir_lists(dirs);
             trim_breadcrumbs(index);
+            setPlaylistUrl();
         }
     )
+}
+
+function setPlaylistUrl() {
+    const playlistRef = document.getElementById("current_playlist_ref");
+    const lowerPlaylistRef = document.getElementById("lower_current_playlist_ref");
+    playlistRef.addEventListener("click", () => {
+        const fetchId = breadCrumbs[breadCrumbs.length - 1].id || '0';
+        window.location = '/api/v1/folderplaylist/'+fetchId;
+    });
+    lowerPlaylistRef.addEventListener("click", () => {
+        const fetchId = breadCrumbs[breadCrumbs.length - 1].id || '0';
+        window.location = '/api/v1/folderplaylist/'+fetchId;
+    });
 }
 
 function process_songs_list(songs) {
@@ -144,6 +158,11 @@ function process_songs_list(songs) {
         tr.appendChild(download);
 
         table.appendChild(tr);
+    }
+    if (songs.length === 0) {
+        document.getElementById("song_wrapper_id").style.visibility = 'hidden';
+    } else {
+        document.getElementById("song_wrapper_id").style.visibility = 'visible';
     }
 }
 
@@ -185,22 +204,29 @@ function process_dir_lists(dirs) {
 
         table.appendChild(tr);
     }
+    if (dirs.length === 0) {
+        document.getElementById("dir_wrapper_id").style.visibility = 'hidden';
+    } else {
+        document.getElementById("dir_wrapper_id").style.visibility='visible';
+    }
 }
 
 
 function generate_random_list() {
-    const songs = [
-        ["/my/link/foo.mp3", "02. Example Song", "Folder link"]
-    ];
-    const table = document.getElementById("random_list");
-    for (let song of songs) {
-        const li = document.createElement("li");
-        appendText(li, "[");
-        li.appendChild(getLink(song[0], "+"));
-        appendText(li, "] · ");
-        li.appendChild(getLink(song[2], song[1]));
-        table.appendChild(li);
-    }
+    fetch('/api/v1/random').then(
+        async (response) => {
+            const data = await response.json();
+            const table = document.getElementById("random_list");
+            for (let song of data) {
+                const li = document.createElement("li");
+                appendText(li, "[");
+                li.appendChild(getLink("index.html?id="+song.folder, "+"));
+                appendText(li, "] · ");
+                li.appendChild(getLink('api/v1/songplaylist/'+song.uuid, song.name));
+                table.appendChild(li);
+            }
+        }
+    );
 }
 
 function generate_random_directory() {

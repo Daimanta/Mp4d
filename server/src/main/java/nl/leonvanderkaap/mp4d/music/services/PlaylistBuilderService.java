@@ -7,6 +7,7 @@ import nl.leonvanderkaap.mp4d.music.entities.Song;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,9 +20,16 @@ public class PlaylistBuilderService {
     public String buildFolderPlaylist(int folderId) {
         Folder folder = songService.getFolderById(folderId).orElseThrow(() -> new NotFoundException("Folder not found"));
         // Actually traverse subfolders
-        List<Song> nestedSongs = folder.getSongs();
+        List<Song> nestedSongs = new ArrayList<>();
+        traverseSongs(folder, nestedSongs);
         return buildPlaylist(nestedSongs);
+    }
 
+    public void traverseSongs(Folder folder, List<Song> songs) {
+        songs.addAll(folder.getSongs());
+        for (Folder nestedFolder: folder.getSubFolders()) {
+            traverseSongs(nestedFolder, songs);
+        }
     }
     public String buildPlaylistByIds(List<String> songIds) {
         List<Song> songs = songService.getSongsByIds(songIds);

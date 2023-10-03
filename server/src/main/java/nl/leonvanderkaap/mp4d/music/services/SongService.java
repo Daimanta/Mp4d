@@ -1,6 +1,7 @@
 package nl.leonvanderkaap.mp4d.music.services;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.Query;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import nl.leonvanderkaap.mp4d.commons.ApplicationSettings;
@@ -33,11 +34,15 @@ public class SongService {
     }
 
     public Optional<Folder> getFolderById(Integer id) {
-        if (id == null) {
+        if (id == null || id == 0) {
             return folderRepository.findByPath("/");
         } else {
             return folderRepository.findById(id);
         }
+    }
+
+    public List<Song> getRandomSongs(int number) {
+        return entityManager.createNativeQuery(String.format("SELECT * FROM song ORDER BY RANDOM() LIMIT %d", number), Song.class).getResultList();
     }
 
     public List<Song> getSongsByIds(List<String> ids) {
