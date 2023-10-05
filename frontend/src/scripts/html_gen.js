@@ -1,8 +1,10 @@
 
 class DirectoryTree {
+    id;
     name;
     directoryTrees;
-    constructor(name, directoryTrees) {
+    constructor(id, name, directoryTrees) {
+        this.id = id;
         this.name = name;
         this.directoryTrees = directoryTrees;
     }
@@ -263,9 +265,23 @@ function generate_random_directory() {
 }
 
 function generate_custom_playlist() {
-    const tree = new DirectoryTree("Main dir", [new DirectoryTree("Subdirectory 1", null), new DirectoryTree("Subdirectory 2", null)]);
-    const table = document.getElementById("playlist_id");
-    addElement(table, tree);
+    fetch('/api/v1/tree').then(
+        async (response) => {
+            const data = await response.json();
+            const tree = getTreeFromData(data);
+            const table = document.getElementById("playlist_id");
+            addElement(table, tree);
+        }
+    )
+}
+
+function getTreeFromData(data) {
+    let tree = new DirectoryTree(data.id, data.name, []);
+    if (data.children.length === 0) return tree;
+    for (let child of data.children) {
+        tree.directoryTrees.push(getTreeFromData(child));
+    }
+    return tree;
 }
 
 function addElement(parent, directoryTree) {

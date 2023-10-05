@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import nl.leonvanderkaap.mp4d.commons.ApplicationSettings;
 import nl.leonvanderkaap.mp4d.commons.exceptions.NotFoundException;
 import nl.leonvanderkaap.mp4d.music.controllers.dtos.FolderDetailsReadDto;
+import nl.leonvanderkaap.mp4d.music.controllers.dtos.FolderTreeParentReadDto;
 import nl.leonvanderkaap.mp4d.music.controllers.dtos.SongReferenceReadDto;
 import nl.leonvanderkaap.mp4d.music.controllers.dtos.SongWithFolderReferenceReadDto;
 import nl.leonvanderkaap.mp4d.music.entities.Song;
@@ -63,5 +64,10 @@ public class SongController {
     @GetMapping("/random")
     public List<SongWithFolderReferenceReadDto> getRandomSongs() {
         return songService.getRandomSongs(20).stream().map(SongWithFolderReferenceReadDto::new).toList();
+    }
+
+    @GetMapping(value = "/tree", produces = MediaType.APPLICATION_JSON_VALUE)
+    public FolderTreeParentReadDto getFolderTree() {
+        return new FolderTreeParentReadDto(songService.getFolderById(null).get());
     }
 }
