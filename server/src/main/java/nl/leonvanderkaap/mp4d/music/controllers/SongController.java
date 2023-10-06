@@ -70,4 +70,12 @@ public class SongController {
     public FolderTreeParentReadDto getFolderTree() {
         return new FolderTreeParentReadDto(songService.getFolderById(null).get());
     }
+
+    @PostMapping(value = "/multifolderplaylist", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.TEXT_PLAIN_VALUE)
+    public byte[] getMultiFolderPlaylist(@RequestBody List<Integer> folderIds, HttpServletResponse response) {
+        String playlistContent = playlistBuilderService.buildMultiFolderPlaylist(folderIds);
+        byte[] result = playlistContent.getBytes(StandardCharsets.UTF_8);
+        response.setHeader("Content-Disposition", "attachment; filename=multi.m3u8");
+        return result;
+    }
 }

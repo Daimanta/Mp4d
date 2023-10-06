@@ -273,6 +273,19 @@ function generate_custom_playlist() {
             addElement(table, tree);
         }
     )
+    document.getElementById("playbutton_id").addEventListener("click", () => {
+        fetch('/api/v1/multifolderplaylist', {
+            method: 'POST',
+            body: JSON.stringify(getCheckboxedFolders()),
+            headers: {
+                "Content-type": "application/json; charset=UTF-8"
+            }
+        });
+    })
+}
+
+function getCheckboxedFolders() {
+    return [1];
 }
 
 function getTreeFromData(data) {
@@ -289,6 +302,7 @@ function addElement(parent, directoryTree) {
 
     const checkbox = document.createElement("input");
     checkbox.type="checkbox";
+    checkbox.name = directoryTree.id;
     list.appendChild(checkbox);
 
     const link = document.createElement("a");

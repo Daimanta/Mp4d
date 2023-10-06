@@ -7,9 +7,7 @@ import nl.leonvanderkaap.mp4d.music.entities.Song;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -23,6 +21,34 @@ public class PlaylistBuilderService {
         List<Song> nestedSongs = new ArrayList<>();
         traverseSongs(folder, nestedSongs);
         return buildPlaylist(nestedSongs);
+    }
+
+    public String buildMultiFolderPlaylist(List<Integer> folderIds) {
+        List<Folder> folders = songService.getFoldersByIds(folderIds);
+        List<Folder> nestedFolders = getNestedFolders(folders);
+        List<Song> songs = new ArrayList<>();
+        for (Folder folder: nestedFolders) {
+            songs.addAll(folder.getSongs());
+        }
+        return buildPlaylist(songs);
+    }
+
+    public List<Folder> getNestedFolders(List<Folder> folders) {
+        List<Folder> result = new ArrayList<>();
+        Set<Integer> found = new HashSet<>();
+        for (Folder folder: folders) {
+            addFolders(folder, result, found);
+        }
+        return result;
+    }
+
+    private void addFolders(Folder folder, List<Folder> folders, Set<Integer> matched) {
+        if (matched.contains(folder.getId())) return;
+        folders.add(folder);
+        matched.add(folder.getId());
+        for (Folder child: folder.getSubFolders()) {
+            addFolders(child, folders, matched);
+        }
     }
 
     public void traverseSongs(Folder folder, List<Song> songs) {

@@ -41,6 +41,10 @@ public class SongService {
         }
     }
 
+    public List<Folder> getFoldersByIds(List<Integer> ids) {
+        return folderRepository.findAllById(ids);
+    }
+
     public List<Song> getRandomSongs(int number) {
         return entityManager.createNativeQuery(String.format("SELECT * FROM song ORDER BY RANDOM() LIMIT %d", number), Song.class).getResultList();
     }
