@@ -272,7 +272,8 @@ function generate_custom_playlist() {
             const table = document.getElementById("playlist_id");
             addElement(table, tree);
         }
-    )
+    );
+
     document.getElementById("playbutton_id").addEventListener("click", () => {
         fetch('/api/v1/multifolderplaylist', {
             method: 'POST',
@@ -280,13 +281,35 @@ function generate_custom_playlist() {
             headers: {
                 "Content-type": "application/json; charset=UTF-8"
             }
+        }).then(
+            res => res.blob()
+        ).then(blob => {
+            const file = window.URL.createObjectURL(blob);
+            let fileLink = document.createElement('a');
+            fileLink.href = file;
+            fileLink.download = `multi.m3u8`;
+            fileLink.click()
         });
-    })
+    });
+
+    document.getElementById("reset_button_id").addEventListener("click", () => {
+        const checks = document.getElementsByClassName("check");
+        for (let checkBox of checks) {
+            checkBox.checked = false;
+        }
+    });
 }
 
 function getCheckboxedFolders() {
-    return [1];
+    let result = [];
+    for (let checkBox of document.getElementsByClassName("check")) {
+        if (checkBox.checked) {
+            result.push(+checkBox.name);
+        }
+    }
+    return result;
 }
+
 
 function getTreeFromData(data) {
     let tree = new DirectoryTree(data.id, data.name, []);
@@ -303,11 +326,12 @@ function addElement(parent, directoryTree) {
     const checkbox = document.createElement("input");
     checkbox.type="checkbox";
     checkbox.name = directoryTree.id;
+    checkbox.className = "check";
     list.appendChild(checkbox);
 
     const link = document.createElement("a");
-    link.href=directoryTree.name;
-    link.textContent=directoryTree.name;
+    link.href = "/?id=" + directoryTree.id;
+    link.textContent = directoryTree.name;
     list.appendChild(link);
 
     if (!directoryTree.isLeaf()) {
