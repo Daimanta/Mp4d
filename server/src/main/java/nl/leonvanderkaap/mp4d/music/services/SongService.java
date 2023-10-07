@@ -6,6 +6,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import nl.leonvanderkaap.mp4d.commons.ApplicationSettings;
 import nl.leonvanderkaap.mp4d.commons.exceptions.BadRequestException;
+import nl.leonvanderkaap.mp4d.commons.exceptions.NotFoundException;
 import nl.leonvanderkaap.mp4d.music.entities.Folder;
 import nl.leonvanderkaap.mp4d.music.entities.FolderRepository;
 import nl.leonvanderkaap.mp4d.music.entities.Song;
@@ -39,6 +40,18 @@ public class SongService {
         } else {
             return folderRepository.findById(id);
         }
+    }
+
+    public List<Folder> getFolderPathToRoot(int id) {
+        List<Folder> result;
+        List<Folder> reversed = new ArrayList<>();
+        Folder current = getFolderById(id).orElseThrow(() -> new NotFoundException("Folder not found"));
+        while (current != null) {
+            reversed.add(current);
+            current = current.getParent();
+        }
+        result = reversed.reversed();
+        return result;
     }
 
     public List<Folder> getFoldersByIds(List<Integer> ids) {

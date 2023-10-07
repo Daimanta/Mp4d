@@ -4,10 +4,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import nl.leonvanderkaap.mp4d.commons.ApplicationSettings;
 import nl.leonvanderkaap.mp4d.commons.exceptions.NotFoundException;
-import nl.leonvanderkaap.mp4d.music.controllers.dtos.FolderDetailsReadDto;
-import nl.leonvanderkaap.mp4d.music.controllers.dtos.FolderTreeParentReadDto;
-import nl.leonvanderkaap.mp4d.music.controllers.dtos.SongReferenceReadDto;
-import nl.leonvanderkaap.mp4d.music.controllers.dtos.SongWithFolderReferenceReadDto;
+import nl.leonvanderkaap.mp4d.music.controllers.dtos.*;
 import nl.leonvanderkaap.mp4d.music.entities.Song;
 import nl.leonvanderkaap.mp4d.music.services.PlaylistBuilderService;
 import nl.leonvanderkaap.mp4d.music.services.SongService;
@@ -77,5 +74,10 @@ public class SongController {
         byte[] result = playlistContent.getBytes(StandardCharsets.UTF_8);
         response.setHeader("Content-Disposition", "attachment; filename=multi.m3u8");
         return result;
+    }
+
+    @GetMapping(value = "/folderpath/{id}")
+    public List<FolderSimpleReadDto> getFolderPathToRoot(@PathVariable(name = "id", required = true) int id) {
+        return songService.getFolderPathToRoot(id).stream().map(FolderSimpleReadDto::new).toList();
     }
 }

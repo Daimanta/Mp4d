@@ -98,9 +98,7 @@ function visit_subfolder(id) {
             const dirs = data.subFolders;
             process_songs_list(songs);
             process_dir_lists(dirs);
-            if (id) {
-                add_breadcrumb({"name": data.name, "id": data.id});
-            }
+            init_breadcrumbs(id || '0');
         }
     )
 }

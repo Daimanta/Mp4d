@@ -1,4 +1,21 @@
-let breadCrumbs = [{"name": "Home", "id": null, "index": 0}];
+let breadCrumbs = [];
+
+function init_breadcrumbs(id) {
+    fetch('/api/v1/folderpath/'+(id || 0)).then(
+        async (response) => {
+            const data = await response.json();
+            let i = 0;
+            breadCrumbs = [];
+            while (i < data.length) {
+                breadCrumbs.push({"name": data[i].name, "id": data[i].id, "index": i});
+                i++;
+            }
+            console.log(breadCrumbs);
+            update_breadcrumbs();
+        }
+    )
+
+}
 
 function update_breadcrumbs() {
     const parent = document.getElementById("breadcrumb_parent_id");
@@ -18,7 +35,7 @@ function update_breadcrumb_element(parent) {
         }
         const link = document.createElement("a");
         link.href = "#";
-        link.textContent = crumb.name;
+        link.textContent = crumb.name === "/" ? "Home" : crumb.name;
         link.addEventListener('click', () => {
             navigate_breadcrumb(crumb.id, crumb.index);
         });
