@@ -230,36 +230,38 @@ function generate_random_list() {
 }
 
 function generate_random_directory() {
-    const songs = [
-        ["/my/link/foo.mp3", "02. Example Song"]
-    ];
-    const table = document.getElementById("random_list_id");
-    for (let song of songs) {
-        const tr = document.createElement("tr");
+    fetch('/api/v1/randomfolder').then(
+        async (response) => {
+            const data = await response.json();
+            const table = document.getElementById("random_list_id");
+            for (let song of data.songs) {
+                const tr = document.createElement("tr");
 
-        const empty = document.createElement("td");
-        empty.width = "10%";
-        empty.textContent = " ";
-        tr.appendChild(empty);
+                const empty = document.createElement("td");
+                empty.width = "10%";
+                empty.textContent = " ";
+                tr.appendChild(empty);
 
-        const name = document.createElement("td");
-        const name_link = document.createElement("a");
-        name_link.href = song[0];
-        name_link.textContent = song[1];
-        name.appendChild(name_link);
-        tr.appendChild(name);
+                const name = document.createElement("td");
+                const name_link = document.createElement("a");
+                name_link.href = song.uuid;
+                name_link.textContent = song.name;
+                name.appendChild(name_link);
+                tr.appendChild(name);
 
-        const download = document.createElement("td");
-        download.align = "right";
-        download.appendChild(document.createTextNode("["));
-        download.appendChild(getLink("my_link", "Info"));
-        download.appendChild(document.createTextNode("] ["));
-        download.appendChild(getLink("my_link_2", "Download"));
-        download.appendChild(document.createTextNode("]"));
-        tr.appendChild(download);
+                const download = document.createElement("td");
+                download.align = "right";
+                download.appendChild(document.createTextNode("["));
+                download.appendChild(getLink("my_link", "Info"));
+                download.appendChild(document.createTextNode("] ["));
+                download.appendChild(getLink("my_link_2", "Download"));
+                download.appendChild(document.createTextNode("]"));
+                tr.appendChild(download);
 
-        table.appendChild(tr);
-    }
+                table.appendChild(tr);
+            }
+        }
+    )
 }
 
 function generate_custom_playlist() {

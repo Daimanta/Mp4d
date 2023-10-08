@@ -62,6 +62,10 @@ public class SongService {
         return entityManager.createNativeQuery(String.format("SELECT * FROM song ORDER BY RANDOM() LIMIT %d", number), Song.class).getResultList();
     }
 
+    public Folder getRandomFolder() {
+        return (Folder) entityManager.createNativeQuery("SELECT * FROM folder ORDER BY RANDOM() LIMIT 1", Folder.class).getSingleResult();
+    }
+
     public List<Song> getSongsByIds(List<String> ids) {
         if (ids == null || ids.isEmpty()) return new ArrayList<>();
         if (ids.stream().anyMatch(Objects::isNull)) {

@@ -80,4 +80,9 @@ public class SongController {
     public List<FolderSimpleReadDto> getFolderPathToRoot(@PathVariable(name = "id", required = true) int id) {
         return songService.getFolderPathToRoot(id).stream().map(FolderSimpleReadDto::new).toList();
     }
+
+    @GetMapping("/randomfolder")
+    public FolderDetailsReadDto getRandomFolder() {
+        return new FolderDetailsReadDto(songService.getRandomFolder());
+    }
 }
