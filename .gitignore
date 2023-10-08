@@ -4,3 +4,4 @@
 /server/build/
 /testdata
 /server/src/main/resources/application-local.yml
+/server/src/main/resources/static/
