@@ -85,4 +85,9 @@ public class SongController {
     public FolderDetailsReadDto getRandomFolder() {
         return new FolderDetailsReadDto(songService.getRandomFolder());
     }
+
+    @GetMapping("/song/{id}")
+    public SongDetailsReadDto getSong(@PathVariable("id") String id) {
+        return new SongDetailsReadDto(songService.getSongById(id).orElseThrow(() -> new NotFoundException("Song not found")));
+    }
 }

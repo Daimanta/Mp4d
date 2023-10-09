@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<script src="scripts/html_gen.js"></script>
+<script src="scripts/file_info.js"></script>
+<head>
+    <meta charset="utf-8">
+    <title>MP4D :: File Information </title>
+    <link rel="stylesheet" href="css_folder/general.css">
+</head>
+
+<body>
+
+<div id="banner">
+    <h1>MP4D v0.1</h1>
+</div>
+
+<ul id="tabmenu"></ul>
+
+<div id="content">
+
+
+    <table border="0" cellpadding="0" cellspacing="5" width="100%" bgcolor="#000000">
+        <tr><td>
+            <table border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#eaecef">
+                <tr bgcolor="#d1d5d7"><td colspan="7" align="center"><h3>File Information</h3></td></tr>
+                <tr><td>
+                    <table width="100%"><tr><td><b>BITRATE</b></td><td id="bitrate_id">128</td></tr>
+                        <tr><td><b>FILENAME</b></td><td id="name_id">05 - Ingrids Klagesang</td></tr>
+                        <tr><td><b>LENGTH</b></td><td id="length_id">04:33</td></tr>
+                        <tr><td><b>SIZE</b></td><td id="size_id">4382670</td></tr>
+                    </table>
+                    <p align='center'>[ <a id="directory_id">Visit Directory</a> | <a id="play_id">Play Track</a> ]</p></td></tr>
+            </table>
+        </td></tr>
+    </table>
+
+</div>
+
+</body>
+<script>
+    const urlParams = new URLSearchParams(window.location.search);
+    generate_tabmenu("file_info");
+    set_fileinfo(urlParams.get("id"));
+</script>
+</html>
+
+
+

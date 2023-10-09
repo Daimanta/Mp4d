@@ -151,7 +151,7 @@ function process_songs_list(songs) {
         const download = document.createElement("td");
         download.align = "right";
         download.appendChild(document.createTextNode("["));
-        download.appendChild(getLink("my_link", "Info"));
+        download.appendChild(getLink("file_info.html?id=" + song.uuid, "Info"));
         download.appendChild(document.createTextNode("] ["));
         download.appendChild(getLink("api/v1/directplay/" + song.uuid, "Download"));
         download.appendChild(document.createTextNode("]"));

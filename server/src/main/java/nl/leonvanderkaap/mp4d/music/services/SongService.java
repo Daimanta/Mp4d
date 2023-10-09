@@ -76,6 +76,10 @@ public class SongService {
         return result;
     }
 
+    public Optional<Song> getSongById(String uuid) {
+        return this.songRepository.findById(uuid);
+    }
+
     public Optional<Song> getMatchingSong(String absoluteBasePath, Path path) {
         FileInformation fileInformation = new FileInformation(path);
         return getMatchingSong(absoluteBasePath, fileInformation);
