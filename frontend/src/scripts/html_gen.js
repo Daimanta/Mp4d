@@ -188,16 +188,18 @@ function process_dir_lists(dirs) {
         tr.appendChild(name);
 
         const content = document.createElement("td")
-        content.textContent = "" + directory.songs + " songs";
+        content.textContent = directory.songs > 0 ? "" + directory.songs + " songs" : "";
         tr.appendChild(content);
 
-        tr.appendChild(document.createElement("td")); // Empty td for lining out columns
+        const subDir = document.createElement("td");
+        subDir.textContent = directory.subFolders > 0 ? "" + directory.subFolders + " subdirectories" : "";
+        tr.appendChild(subDir);
 
         const play = document.createElement("td");
         play.appendChild(document.createTextNode("["));
         const play_link = document.createElement("a");
         play_link.textContent = "Play";
-        play_link.href = directory[0];
+        play_link.href = "/api/v1/folderplaylist/" + directory.id;
         play.appendChild(play_link);
         play.appendChild(document.createTextNode("]"));
         tr.appendChild(play);
