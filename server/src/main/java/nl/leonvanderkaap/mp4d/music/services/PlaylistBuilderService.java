@@ -59,7 +59,16 @@ public class PlaylistBuilderService {
     }
     public String buildPlaylistByIds(List<String> songIds) {
         List<Song> songs = songService.getSongsByIds(songIds);
-        return buildPlaylist(songs);
+        List<Song> ordered = new ArrayList<>();
+        for (String songId: songIds) {
+            for (Song song: songs) {
+                if (song.getUuid().equals(songId)) {
+                    ordered.add(song);
+                    break;
+                }
+            }
+        }
+        return buildPlaylist(ordered);
     }
 
     public String buildPlaylist(List<Song> songs) {

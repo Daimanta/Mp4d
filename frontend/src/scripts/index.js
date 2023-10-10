@@ -10,11 +10,9 @@ function init_breadcrumbs(id) {
                 breadCrumbs.push({"name": data[i].name, "id": data[i].id, "index": i});
                 i++;
             }
-            console.log(breadCrumbs);
             update_breadcrumbs();
         }
     )
-
 }
 
 function update_breadcrumbs() {
@@ -41,12 +39,6 @@ function update_breadcrumb_element(parent) {
         });
         parent.appendChild(link);
     }
-}
-
-function add_breadcrumb(elem) {
-        elem.index = breadCrumbs.length;
-        breadCrumbs.push(elem);
-        update_breadcrumbs();
 }
 
 function trim_breadcrumbs(index) {

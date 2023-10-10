@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <script src="scripts/html_gen.js"></script>
+<script src="scripts/random.js"></script>
 <head>
     <meta charset="utf-8">
     <title>MP4D :: Choose Random Tracks </title>
@@ -27,7 +28,7 @@
                 <tr><td>
                     <ul id="random_list"></ul>
                     <table><tr><td>
-                        <input type="submit" name="submit" value="Play" />
+                        <input type="button" value="Play" id="play_random_id"/>
                     </td>
                         <td><form action='/random' method='get'>
                             <select name="count">
@@ -36,7 +37,7 @@
                                 <option value="40">40</option>
                                 <option value="50">50</option>
                             </select>
-                            <input type="submit" name="submit" value="Try Again" />
+                            <input type="button" value="Try Again" id="random_tryagain_id"/>
                             [ <a href="random_directory.html">Random Directory</a> ]  </form> </td></tr></table>
                 </td></tr>
             </table>
@@ -48,6 +49,7 @@
 </body>
 <script>
     generate_tabmenu("/random.html");
+    setup_randompage_js();
     generate_random_list();
 </script>
 </html>

@@ -50,6 +50,14 @@ public class SongController {
         return result;
     }
 
+    @PostMapping(value = "/songplaylist/", produces = MediaType.TEXT_PLAIN_VALUE)
+    public byte[] getMultisongPlaylist(@RequestBody List<String> uuids, HttpServletResponse response) {
+        String playlistContent = playlistBuilderService.buildPlaylistByIds(uuids);
+        byte[] result = playlistContent.getBytes(StandardCharsets.UTF_8);
+        response.setHeader("Content-Disposition", "filename=multi.m3u8");
+        return result;
+    }
+
     @GetMapping(value = "/folderplaylist/{id}", produces = MediaType.TEXT_PLAIN_VALUE)
     public byte[] getFolderPlaylist(@PathVariable(name = "id", required = false) Integer id, HttpServletResponse response) {
         String playlistContent = playlistBuilderService.buildFolderPlaylist(id);

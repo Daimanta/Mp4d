@@ -214,58 +214,6 @@ function process_dir_lists(dirs) {
 }
 
 
-function generate_random_list() {
-    fetch('/api/v1/random').then(
-        async (response) => {
-            const data = await response.json();
-            const table = document.getElementById("random_list");
-            for (let song of data) {
-                const li = document.createElement("li");
-                appendText(li, "[");
-                li.appendChild(getLink("index.html?id="+song.folder, "+"));
-                appendText(li, "] · ");
-                li.appendChild(getLink('api/v1/songplaylist/'+song.uuid, song.name));
-                table.appendChild(li);
-            }
-        }
-    );
-}
-
-function generate_random_directory() {
-    fetch('/api/v1/randomfolder').then(
-        async (response) => {
-            const data = await response.json();
-            const table = document.getElementById("random_list_id");
-            for (let song of data.songs) {
-                const tr = document.createElement("tr");
-
-                const empty = document.createElement("td");
-                empty.width = "10%";
-                empty.textContent = " ";
-                tr.appendChild(empty);
-
-                const name = document.createElement("td");
-                const name_link = document.createElement("a");
-                name_link.href = song.uuid;
-                name_link.textContent = song.name;
-                name.appendChild(name_link);
-                tr.appendChild(name);
-
-                const download = document.createElement("td");
-                download.align = "right";
-                download.appendChild(document.createTextNode("["));
-                download.appendChild(getLink("my_link", "Info"));
-                download.appendChild(document.createTextNode("] ["));
-                download.appendChild(getLink("my_link_2", "Download"));
-                download.appendChild(document.createTextNode("]"));
-                tr.appendChild(download);
-
-                table.appendChild(tr);
-            }
-        }
-    )
-}
-
 function generate_custom_playlist() {
     fetch('/api/v1/tree').then(
         async (response) => {
