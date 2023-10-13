@@ -18,10 +18,14 @@ public class Song {
     private Integer length;
     private Integer mtime;
     private int size;
+    private String artist;
+    private String album;
+    private Integer year;
+    private String genre;
 
     @ManyToOne(optional = false)
     private Folder folder;
-    public Song(Folder folder, String name, Integer bitrate, Integer length, Integer mtime, int size) {
+    public Song(Folder folder, String name, Integer bitrate, Integer length, Integer mtime, int size, String artist, String album, Integer year, String genre) {
         this.uuid = UUID.randomUUID().toString();
         this.folder = folder;
         this.name = name;
@@ -29,6 +33,10 @@ public class Song {
         this.length = length;
         this.mtime = mtime;
         this.size = size;
+        this.artist = artist;
+        this.album = album;
+        this.year = year;
+        this.genre = genre;
     }
 
     public String getRelativePath() {

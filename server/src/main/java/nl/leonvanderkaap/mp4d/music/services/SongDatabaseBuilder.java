@@ -14,6 +14,8 @@ import org.jaudiotagger.audio.AudioHeader;
 import org.jaudiotagger.audio.exceptions.CannotReadException;
 import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
 import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
+import org.jaudiotagger.tag.FieldKey;
+import org.jaudiotagger.tag.Tag;
 import org.jaudiotagger.tag.TagException;
 import org.springframework.stereotype.Service;
 
@@ -145,18 +147,35 @@ public class SongDatabaseBuilder {
             Integer length = null;
             Integer mtime = null;
             int size = (int) file.length();
+            String artist = null;
+            String album = null;
+            Integer year = null;
+            String genre = null;
             try {
                 AudioFile audioFile = AudioFileIO.read(path.toFile());
                 AudioHeader header = audioFile.getAudioHeader();
                 bitrate = (int) header.getBitRateAsNumber();
                 length = header.getTrackLength();
                 mtime = 0;
+                Tag tag = audioFile.getTag();
+                if (tag != null) {
+                    artist = tag.getFirst(FieldKey.ARTIST);
+                    album = tag.getFirst(FieldKey.ALBUM);
+                    try {
+                        year = Integer.parseInt(tag.getFirst(FieldKey.YEAR));
+                    } catch (Exception e) {}
+                    genre = tag.getFirst(FieldKey.GENRE);
+                }
             } catch (CannotReadException e) {
                 throw new RuntimeException(e);
             } catch (IOException|TagException|ReadOnlyFileException|InvalidAudioFrameException e) {
                 throw new RuntimeException(e);
             }
-            Song song = new Song(folder, fileInformation.getFileName(), bitrate, length, mtime, size);
+            if (artist != null && artist.isEmpty()) artist = null;
+            if (album != null && album.isEmpty()) album = null;
+            if (genre != null && genre.isEmpty()) genre = null;
+
+            Song song = new Song(folder, fileInformation.getFileName(), bitrate, length, mtime, size, artist, album, year, genre);
             songRepository.save(song);
             return true;
         } else {

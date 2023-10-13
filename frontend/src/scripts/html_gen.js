@@ -21,7 +21,6 @@ function generate_tabmenu(this_url) {
         ["/playlist.html", "Custom Playlist"],
         ["/random.html", "Random Selection"],
         ["/random_directory.html", "Random Directory"],
-        ["/preferences.html", "Preferences"],
         ["/search.html", "Search"],
         ["/statistics/statistics.html", "Statistics"],
         ["/extras.html", "Extras"]

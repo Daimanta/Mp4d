@@ -14,7 +14,11 @@ CREATE TABLE song (
     bitrate integer,
     length integer,
     mtime integer,
-    size integer not null
+    size integer not null,
+    artist varchar(255),
+    album varchar(255),
+    year integer,
+    genre varchar(255)
 );
 
 CREATE INDEX song_folder_idx ON song(folder_id);
