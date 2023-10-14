@@ -3,6 +3,8 @@ package nl.leonvanderkaap.mp4d.music.services;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import jakarta.transaction.Transactional;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import nl.leonvanderkaap.mp4d.commons.ApplicationSettings;
 import nl.leonvanderkaap.mp4d.commons.exceptions.BadRequestException;
@@ -117,20 +119,24 @@ public class SongService {
         return "/";
     }
 
-    public List<String> getGroupedByArtist() {
-        return (List<String>) entityManager.createNativeQuery("SELECT artist FROM song WHERE artist IS NOT NULL GROUP BY ARTIST", String.class).getResultList();
+    public List<StringGroup> getGroupedByArtist() {
+        List<Object[]> res =  (List<Object[]>) entityManager.createNativeQuery("SELECT artist, COUNT(*) FROM song WHERE artist IS NOT NULL GROUP BY ARTIST", Object[].class).getResultList();
+        return res.stream().map(x -> new StringGroup((String)x[0], (int)x[1])).toList();
     }
 
-    public List<String> getGroupedByAlbum() {
-        return (List<String>) entityManager.createNativeQuery("SELECT album FROM song WHERE album IS NOT NULL GROUP BY album", String.class).getResultList();
+    public List<StringGroup> getGroupedByAlbum() {
+        List<Object[]> res = (List<Object[]>) entityManager.createNativeQuery("SELECT album, COUNT(*) FROM song WHERE album IS NOT NULL GROUP BY album", Object[].class).getResultList();
+        return res.stream().map(x -> new StringGroup((String)x[0], (int)x[1])).toList();
     }
 
-    public List<Integer> getGroupedByYear() {
-        return (List<Integer>) entityManager.createNativeQuery("SELECT year FROM song WHERE year IS NOT NULL GROUP BY year", Integer.class).getResultList();
+    public List<IntegerGroup> getGroupedByYear() {
+        List<Object[]> res = (List<Object[]>) entityManager.createNativeQuery("SELECT year, COUNT(*) FROM song WHERE year IS NOT NULL GROUP BY year", Object[].class).getResultList();
+        return res.stream().map(x -> new IntegerGroup((int)x[0], (int)x[1])).toList();
     }
 
-    public List<String> getGroupedByGenre() {
-        return (List<String>) entityManager.createNativeQuery("SELECT genre FROM song WHERE genre IS NOT NULL GROUP BY genre", String.class).getResultList();
+    public List<StringGroup> getGroupedByGenre() {
+        List<Object[]> res = (List<Object[]>) entityManager.createNativeQuery("SELECT genre, COUNT(*) FROM song WHERE genre IS NOT NULL GROUP BY genre", Object[].class).getResultList();
+        return res.stream().map(x -> new StringGroup((String)x[0], (int)x[1])).toList();
     }
 
     private class FileInformation {
@@ -158,4 +164,18 @@ public class SongService {
         }
     }
 
+
+    @Getter
+    @AllArgsConstructor
+    public static class StringGroup {
+        String string;
+        int count;
+    }
+
+    @Getter
+    @AllArgsConstructor
+    public static class IntegerGroup {
+        int integer;
+        int count;
+    }
 }

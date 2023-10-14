@@ -100,22 +100,22 @@ public class SongController {
     }
 
     @GetMapping("/grouped/artist")
-    public List<String> getGroupedByArtist() {
+    public List<SongService.StringGroup> getGroupedByArtist() {
         return songService.getGroupedByArtist();
     }
 
     @GetMapping("/grouped/album")
-    public List<String> getGroupedByAlbum() {
+    public List<SongService.StringGroup> getGroupedByAlbum() {
         return songService.getGroupedByAlbum();
     }
 
     @GetMapping("/grouped/year")
-    public List<Integer> getGroupedByYear() {
+    public List<SongService.IntegerGroup> getGroupedByYear() {
         return songService.getGroupedByYear();
     }
 
     @GetMapping("/grouped/genre")
-    public List<String> getGroupedByGenre() {
+    public List<SongService.StringGroup> getGroupedByGenre() {
         return songService.getGroupedByGenre();
     }
 }
