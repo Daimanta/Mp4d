@@ -1,8 +1,10 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<!DOCTYPE html>
+<html lang="en">
+<script src="../scripts/html_gen.js"></script>
+<script src="../scripts/grouped.js"></script>
 <head>
-    <title>GNUMP3d :: Browse by Tag</title>
+    <meta charset="utf-8">
+    <title>MP4D :: Browse by Artist</title>
     <link rel="stylesheet" href="../css_folder/general.css">
     <meta name="description" content="CSS techniques to demonstrate pure CSS tabbed navigation menu" />
     <meta name="keywords" content="" />
@@ -12,20 +14,10 @@
 <body>
 
 <div id="banner">
-    <h1>GNUMP3d v3.0</h1>
+    <h1>MP4D v0.1</h1>
 </div>
 
-<ul id="tabmenu">
-    <li><a href="/">Music</a></li>
-    <li><a class="active" href="/tagbrowse">Browse by Tag</a></li>
-    <li><a href="/playlist/">Custom Playlist</a></li>
-    <li><a href="/random">Random Selection</a></li>
-    <li><a href="/random/directory">Random Directory</a></li>
-    <li><a href="/prefs/">Preferences</a></li>
-    <li><a href="/search/">Search</a></li>
-    <li><a href="/statistics.html">Statistics</a></li>
-    <li><a href="/src/extras.htmlhtml">Extras</a></li>
-</ul>
+<ul id="tabmenu"></ul>
 
 <div id="content">
 
@@ -44,7 +36,10 @@
 </div>
 
 </body>
-
+<script>
+    generate_tabmenu("tag_browse/tag_browse.html");
+    group_by_artist();
+</script>
 </html>
 
 

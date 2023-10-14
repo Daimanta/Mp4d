@@ -117,6 +117,22 @@ public class SongService {
         return "/";
     }
 
+    public List<String> getGroupedByArtist() {
+        return (List<String>) entityManager.createNativeQuery("SELECT artist FROM song WHERE artist IS NOT NULL GROUP BY ARTIST", String.class).getResultList();
+    }
+
+    public List<String> getGroupedByAlbum() {
+        return (List<String>) entityManager.createNativeQuery("SELECT album FROM song WHERE album IS NOT NULL GROUP BY album", String.class).getResultList();
+    }
+
+    public List<Integer> getGroupedByYear() {
+        return (List<Integer>) entityManager.createNativeQuery("SELECT year FROM song WHERE year IS NOT NULL GROUP BY year", Integer.class).getResultList();
+    }
+
+    public List<String> getGroupedByGenre() {
+        return (List<String>) entityManager.createNativeQuery("SELECT genre FROM song WHERE genre IS NOT NULL GROUP BY genre", String.class).getResultList();
+    }
+
     private class FileInformation {
         private String directory;
         private String fileName;

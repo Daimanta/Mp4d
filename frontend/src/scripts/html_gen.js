@@ -22,7 +22,6 @@ function generate_tabmenu(this_url) {
         ["/random.html", "Random Selection"],
         ["/random_directory.html", "Random Directory"],
         ["/search.html", "Search"],
-        ["/statistics/statistics.html", "Statistics"],
         ["/extras.html", "Extras"]
     ];
     const top = document.getElementById("tabmenu");

@@ -98,4 +98,24 @@ public class SongController {
     public SongDetailsReadDto getSong(@PathVariable("id") String id) {
         return new SongDetailsReadDto(songService.getSongById(id).orElseThrow(() -> new NotFoundException("Song not found")));
     }
+
+    @GetMapping("/grouped/artist")
+    public List<String> getGroupedByArtist() {
+        return songService.getGroupedByArtist();
+    }
+
+    @GetMapping("/grouped/album")
+    public List<String> getGroupedByAlbum() {
+        return songService.getGroupedByAlbum();
+    }
+
+    @GetMapping("/grouped/year")
+    public List<Integer> getGroupedByYear() {
+        return songService.getGroupedByYear();
+    }
+
+    @GetMapping("/grouped/genre")
+    public List<String> getGroupedByGenre() {
+        return songService.getGroupedByGenre();
+    }
 }
