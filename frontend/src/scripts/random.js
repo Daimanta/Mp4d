@@ -11,9 +11,9 @@ function generate_random_list() {
             for (let song of current) {
                 const li = document.createElement("li");
                 appendText(li, "[");
-                li.appendChild(getLink("index.html?id="+song.folder, "+"));
+                li.appendChild(get_link("index.html?id="+song.folder, "+"));
                 appendText(li, "] · ");
-                li.appendChild(getLink('api/v1/songplaylist/'+song.uuid, song.name));
+                li.appendChild(get_link('api/v1/songplaylist/'+song.uuid, song.name));
                 table.appendChild(li);
             }
         }
@@ -35,13 +35,7 @@ function setup_randompage_js() {
             }
         }).then(
             res => res.blob()
-        ).then(blob => {
-            const file = window.URL.createObjectURL(blob);
-            let fileLink = document.createElement('a');
-            fileLink.href = file;
-            fileLink.download = `multi.m3u8`;
-            fileLink.click()
-        });
+        ).then(blob => download_with_name(blob, `multi.m3u8`));
         console.log(ids);
     });
 }

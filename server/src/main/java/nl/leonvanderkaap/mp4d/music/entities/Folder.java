@@ -10,7 +10,7 @@ import java.util.List;
 @Entity
 @NoArgsConstructor
 @Getter
-public class Folder {
+public class Folder implements Comparable<Folder>{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,13 +20,13 @@ public class Folder {
     private String path;
 
     @OneToMany(mappedBy = "folder")
-    private List<Song> songs = new ArrayList<>();
+    private final List<Song> songs = new ArrayList<>();
 
     @ManyToOne(optional = true)
     private Folder parent;
 
     @OneToMany(mappedBy = "parent")
-    private List<Folder> subFolders = new ArrayList<>();
+    private final List<Folder> subFolders = new ArrayList<>();
 
     public Folder(String path, Folder parent) {
         this.path = path;
@@ -39,5 +39,10 @@ public class Folder {
         } else {
             return path.substring(path.lastIndexOf("/") + 1);
         }
+    }
+
+    @Override
+    public int compareTo(Folder o) {
+        return this.path.compareTo(o.getPath());
     }
 }

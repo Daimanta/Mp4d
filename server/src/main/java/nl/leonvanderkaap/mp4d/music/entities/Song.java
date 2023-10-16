@@ -9,7 +9,7 @@ import java.util.UUID;
 @Entity
 @Getter
 @NoArgsConstructor
-public class Song {
+public class Song implements Comparable<Song>{
 
     @Id
     private String uuid;
@@ -41,5 +41,10 @@ public class Song {
 
     public String getRelativePath() {
         return folder.getPath() + "/" + name;
+    }
+
+    @Override
+    public int compareTo(Song o) {
+        return this.name.compareTo(o.getName());
     }
 }

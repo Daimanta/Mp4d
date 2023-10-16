@@ -36,7 +36,8 @@ public class PlaylistBuilderService {
     public List<Folder> getNestedFolders(List<Folder> folders) {
         List<Folder> result = new ArrayList<>();
         Set<Integer> found = new HashSet<>();
-        for (Folder folder: folders) {
+        List<Folder> ordered = folders.stream().sorted().toList();
+        for (Folder folder: ordered) {
             addFolders(folder, result, found);
         }
         return result;
@@ -46,14 +47,16 @@ public class PlaylistBuilderService {
         if (matched.contains(folder.getId())) return;
         folders.add(folder);
         matched.add(folder.getId());
-        for (Folder child: folder.getSubFolders()) {
+        List<Folder> sortedSubfolders = folder.getSubFolders().stream().sorted().toList();
+        for (Folder child: sortedSubfolders) {
             addFolders(child, folders, matched);
         }
     }
 
     public void traverseSongs(Folder folder, List<Song> songs) {
-        songs.addAll(folder.getSongs());
-        for (Folder nestedFolder: folder.getSubFolders()) {
+        songs.addAll(folder.getSongs().stream().sorted().toList());
+        List<Folder> sortedSubfolders = folder.getSubFolders().stream().sorted().toList();
+        for (Folder nestedFolder: sortedSubfolders) {
             traverseSongs(nestedFolder, songs);
         }
     }

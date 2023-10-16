@@ -48,13 +48,7 @@ function generate_random_directory() {
                x.addEventListener('click', () => {
                     fetch('/api/v1/folderplaylist/' + data.id).then(
                         res => res.blob()
-                    ).then(blob => {
-                        const file = window.URL.createObjectURL(blob);
-                        let fileLink = document.createElement('a');
-                        fileLink.href = file;
-                        fileLink.download = data.id+`.m3u8`;
-                        fileLink.click()
-                    });
+                    ).then(blob => download_with_name(blob, data.id+`.m3u8`));
                 });
             });
 
@@ -68,7 +62,7 @@ function generate_random_directory() {
                 tr.appendChild(empty);
 
                 const name = document.createElement("td");
-                const name_link = document.createElement("a");
+                const name_link = get_link() document.createElement("a");
                 name_link.href = song.uuid;
                 name_link.textContent = song.name;
                 name.appendChild(name_link);
@@ -77,9 +71,9 @@ function generate_random_directory() {
                 const download = document.createElement("td");
                 download.align = "right";
                 download.appendChild(document.createTextNode("["));
-                download.appendChild(getLink("my_link", "Info"));
+                download.appendChild(get_link("my_link", "Info"));
                 download.appendChild(document.createTextNode("] ["));
-                download.appendChild(getLink("my_link_2", "Download"));
+                download.appendChild(get_link("my_link_2", "Download"));
                 download.appendChild(document.createTextNode("]"));
                 tr.appendChild(download);
 

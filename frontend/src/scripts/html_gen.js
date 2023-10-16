@@ -121,11 +121,13 @@ function setPlaylistUrl() {
     const lowerPlaylistRef = document.getElementById("lower_current_playlist_ref");
     playlistRef.addEventListener("click", () => {
         const fetchId = breadCrumbs[breadCrumbs.length - 1].id || '0';
-        window.location = '/api/v1/folderplaylist/'+fetchId;
+        const fetch_url = '/api/v1/folderplaylist/'+fetchId;
+        rest_get_with_name(fetch_url, fetchId + '.m3u8');
     });
     lowerPlaylistRef.addEventListener("click", () => {
         const fetchId = breadCrumbs[breadCrumbs.length - 1].id || '0';
-        window.location = '/api/v1/folderplaylist/'+fetchId;
+        const fetch_url = '/api/v1/folderplaylist/'+fetchId;
+        rest_get_with_name(fetch_url, fetchId + '.m3u8');
     });
 }
 
@@ -149,9 +151,9 @@ function process_songs_list(songs) {
         const download = document.createElement("td");
         download.align = "right";
         download.appendChild(document.createTextNode("["));
-        download.appendChild(getLink("file_info.html?id=" + song.uuid, "Info"));
+        download.appendChild(get_link("file_info.html?id=" + song.uuid, "Info"));
         download.appendChild(document.createTextNode("] ["));
-        download.appendChild(getLink("api/v1/directplay/" + song.uuid, "Download"));
+        download.appendChild(get_link("api/v1/directplay/" + song.uuid, "Download"));
         download.appendChild(document.createTextNode("]"));
         tr.appendChild(download);
 
@@ -231,13 +233,7 @@ function generate_custom_playlist() {
             }
         }).then(
             res => res.blob()
-        ).then(blob => {
-            const file = window.URL.createObjectURL(blob);
-            let fileLink = document.createElement('a');
-            fileLink.href = file;
-            fileLink.download = `multi.m3u8`;
-            fileLink.click()
-        });
+        ).then(blob => download_with_name(blob, `multi.m3u8`));
     });
 
     document.getElementById("reset_button_id").addEventListener("click", () => {
@@ -291,14 +287,6 @@ function addElement(parent, directoryTree) {
     }
 
     parent.appendChild(list);
-}
-
-
-function getLink(link, text) {
-    const result = document.createElement("a");
-    result.href = link;
-    result.textContent = text;
-    return result;
 }
 
 function appendText(element, text) {
