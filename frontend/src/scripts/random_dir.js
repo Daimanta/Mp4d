@@ -62,9 +62,7 @@ function generate_random_directory() {
                 tr.appendChild(empty);
 
                 const name = document.createElement("td");
-                const name_link = get_link() document.createElement("a");
-                name_link.href = song.uuid;
-                name_link.textContent = song.name;
+                const name_link = get_link(song.uuid, song.name);
                 name.appendChild(name_link);
                 tr.appendChild(name);
 
