@@ -31,9 +31,9 @@
     </table>
 
     <center>
-        <h3><a href="/search?album=&amp;artist=&amp;dir=&amp;genre=&amp;theme=Tabular&amp;title=&amp;type=all&amp;year=&amp;play=1&amp;q=ama">Play All Results</a></h3>
+        <h3><a href="#" id="play_search_results_id">Play All Results</a></h3>
         &middot;
-        <h4><a href="/search">Search Again</a></h4>
+        <h4><a href="./search.html">Search Again</a></h4>
     </center>
 
 </div>
@@ -41,6 +41,7 @@
 </body>
 <script>
     generate_tabmenu(null);
+    document.getElementById("play_search_results_id").addEventListener("click", () => {play_search_results()});
     do_search();
 </script>
 </html>

@@ -15,7 +15,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -117,5 +116,10 @@ public class SongController {
     @GetMapping("/grouped/genre")
     public List<SongService.StringGroup> getGroupedByGenre() {
         return songService.getGroupedByGenre();
+    }
+
+    @PostMapping(value = "/search", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public List<SongWithFolderReferenceReadDto> searchSongs(@RequestBody SearchRequestDto searchRequest) {
+        return songService.searchSongs(searchRequest).stream().map(SongWithFolderReferenceReadDto::new).toList();
     }
 }

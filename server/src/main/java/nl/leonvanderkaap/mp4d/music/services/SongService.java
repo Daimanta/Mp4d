@@ -1,7 +1,10 @@
 package nl.leonvanderkaap.mp4d.music.services;
 
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.Query;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import nl.leonvanderkaap.mp4d.commons.ApplicationSettings;
 import nl.leonvanderkaap.mp4d.commons.exceptions.BadRequestException;
 import nl.leonvanderkaap.mp4d.commons.exceptions.NotFoundException;
+import nl.leonvanderkaap.mp4d.music.controllers.dtos.SearchRequestDto;
 import nl.leonvanderkaap.mp4d.music.entities.Folder;
 import nl.leonvanderkaap.mp4d.music.entities.FolderRepository;
 import nl.leonvanderkaap.mp4d.music.entities.Song;
@@ -137,6 +141,45 @@ public class SongService {
     public List<StringGroup> getGroupedByGenre() {
         List<Object[]> res = (List<Object[]>) entityManager.createNativeQuery("SELECT genre, COUNT(*) FROM song WHERE genre IS NOT NULL GROUP BY genre", Object[].class).getResultList();
         return res.stream().map(x -> new StringGroup((String)x[0], (int)x[1])).toList();
+    }
+
+    public List<Song> searchSongs(SearchRequestDto searchRequest) {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Song> cq = cb.createQuery(Song.class);
+
+        Root<Song> root = cq.from(Song.class);
+
+        List<Predicate> predicates = new ArrayList<>();
+
+        if (searchRequest.getSong() != null && !searchRequest.getSong().isBlank()) {
+            predicates.add(iLikePredicate(cb, root, "name", searchRequest.getSong()));
+        }
+
+        if (searchRequest.getArtist() != null && !searchRequest.getArtist().isBlank()) {
+            predicates.add(iLikePredicate(cb, root, "artist", searchRequest.getArtist()));
+        }
+
+        if (searchRequest.getAlbum() != null && !searchRequest.getAlbum().isBlank()) {
+            predicates.add(iLikePredicate(cb, root, "album", searchRequest.getAlbum()));
+        }
+
+        if (searchRequest.getYear() != null) {
+            predicates.add(cb.equal(root.get("year"), searchRequest.getYear()));
+        }
+
+        if (searchRequest.isAll()) {
+            cq.where(predicates.toArray(new Predicate[0]));
+        } else {
+            cq.where(cb.or(predicates.toArray(new Predicate[0])));
+        }
+
+        cq.distinct(true);
+
+        return entityManager.createQuery(cq).getResultList();
+    }
+
+    private static Predicate iLikePredicate(CriteriaBuilder criteriaBuilder, Root<?> root, String fieldname, String matcher) {
+        return criteriaBuilder.like(criteriaBuilder.lower(root.get(fieldname)), String.format("%%%s%%", matcher));
     }
 
     private class FileInformation {
