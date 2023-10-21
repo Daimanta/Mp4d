@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <script src="../scripts/html_gen.js"></script>
+<script src="../scripts/grouped.js"></script>
 <head>
     <meta charset="utf-8">
     <title>MP4D :: Browse by Album</title>
     <link rel="stylesheet" href="../css_folder/general.css">
-    <meta name="description" content="CSS techniques to demonstrate pure CSS tabbed navigation menu" />
-    <meta name="keywords" content="" />
+    <meta name="description" content="CSS techniques to demonstrate pure CSS tabbed navigation menu"/>
+    <meta name="keywords" content=""/>
 
 </head>
 
@@ -22,23 +23,16 @@
 
 
     <table border="0" cellpadding="0" cellspacing="5" width="100%" bgcolor="#000000">
-        <tr><td>
-            <table border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#eaecef">
-                <tr bgcolor="#d1d5d7"><td colspan="7" align="center"><h3>Browsing all albums</h3></td></tr>
-                <tr><td>
-                <span id="content_id">
-
-                </span>
-
-                <tr><td colspan=2 align='left'><a href='/tagbrowse/album/Peer%20Gynt%20%28Incidental%20Music%29%20Cd1'>Peer Gynt (Incidental Music) Cd1</a></td><td>18 songs</td></tr>
-                <tr><td colspan=2 align='left'><a href='/tagbrowse/album/Peer%20Gynt%20%28Incidental%20Music%29%20Cd2'>Peer Gynt (Incidental Music) Cd2</a></td><td>13 songs</td></tr>
-                <tr><td colspan=2 align='left'><a href='/tagbrowse/album/Piano%20Conc%20%26%20Peer%20Gynt%20Suites'>Piano Conc & Peer Gynt Suites</a></td><td>7 songs</td></tr>
-                <tr><td colspan=2 align='left'><a href='/tagbrowse/album/Piano%20Conc%20%26%20Peer%20Gynt%20Suites
-'>Piano Conc & Peer Gynt Suites
-                </a></td><td>4 songs</td></tr>
-        </td></tr>
-    </table>
-    </td></tr>
+        <tr>
+            <td>
+                <table border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#eaecef">
+                    <tr bgcolor="#d1d5d7">
+                        <td colspan="7" align="center"><h3>Browsing all artists</h3></td>
+                </table>
+                <table border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#eaecef"
+                       id="content_id"></table>
+            </td>
+        </tr>
     </table>
 
 </div>
@@ -46,6 +40,7 @@
 </body>
 <script>
     generate_tabmenu("tag_browse/tag_browse.html");
+    group_by_album();
 </script>
 </html>
 

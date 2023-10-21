@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <script src="../scripts/html_gen.js"></script>
+<script src="../scripts/grouped.js"></script>
 <head>
     <meta charset="utf-8">
     <title>MP4D :: Browse by Genre</title>
@@ -21,17 +22,15 @@
 
 
     <table border="0" cellpadding="0" cellspacing="5" width="100%" bgcolor="#000000">
-        <tr><td>
-            <table border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#eaecef">
-                <tr bgcolor="#d1d5d7"><td colspan="7" align="center"><h3>Browsing all genres</h3></td></tr>
-                <tr><td>
-                <tr><td colspan=2 align='left'><a href='/tagbrowse/genre/Classical'>Classical</a></td><td>30 songs</td></tr>
-                <tr><td colspan=2 align='left'><a href='/tagbrowse/genre/Classical
-'>Classical
-                </a></td><td>1 songs</td></tr>
-        </td></tr>
-    </table>
-    </td></tr>
+        <tr>
+            <td>
+                <table border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#eaecef">
+                    <tr bgcolor="#d1d5d7">
+                        <td colspan="7" align="center"><h3>Browsing all artists</h3></td>
+                </table>
+                <table border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#eaecef" id="content_id"></table>
+            </td>
+        </tr>
     </table>
 
 </div>
@@ -39,6 +38,7 @@
 </body>
 <script>
     generate_tabmenu("tag_browse/tag_browse.html");
+    group_by_genre();
 </script>
 </html>
 
