@@ -41,6 +41,10 @@ jar {
 }
 
 bootJar {
+    into("BOOT-INF/classes/static") {
+        from("${project(':frontend').projectDir}/src")
+    }
+
     manifest {
         attributes 'Implementation-Gitcommit': getCheckedOutGitCommitHash()
     }

@@ -1,6 +1,0 @@
-tasks.register("copyFrontend", Copy) {
-    def sourcePath = "$parent.rootDir\\frontend\\src"
-    def destinationPath = "$parent.rootDir\\server\\src\\main\\resources\\static"
-    from(sourcePath)
-    into(destinationPath)
-}
