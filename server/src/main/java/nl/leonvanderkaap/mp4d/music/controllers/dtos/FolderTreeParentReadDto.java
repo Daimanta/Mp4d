@@ -16,7 +16,8 @@ public class FolderTreeParentReadDto {
     public FolderTreeParentReadDto(Folder top) {
         this.id = top.getId();
         this.name = top.getFolderName();
-        for(Folder folder: top.getSubFolders()) {
+        List<Folder> sortedSubfolders = top.getSubFolders().stream().sorted().toList();
+        for(Folder folder: sortedSubfolders) {
             children.add(new FolderTreeRecursiveDto(folder));
         }
     }

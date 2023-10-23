@@ -26,7 +26,6 @@ import java.nio.file.FileVisitor;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -47,8 +46,6 @@ public class SongDatabaseBuilder {
     public void buildDatabase() throws IOException {
         Path path = Path.of(applicationSettings.getBasepath());
         String absoluteBasePath = path.toAbsolutePath().toString();
-        final int[] oldSong = {0};
-        final int[] newSong = {0};
         log.info("Starting folder indexing");
 
         Files.walkFileTree(path, new FileVisitor<>(){
@@ -75,42 +72,31 @@ public class SongDatabaseBuilder {
             }
         });
 
-        final Folder[] currentFolder = {null};
-        final List<Song>[] folderSongs = new List[]{new ArrayList<>()};
+        FileInfoHolder fileInfoHolder = new FileInfoHolder();
+        iterateOverFiles(path.toFile(), fileInfoHolder, absoluteBasePath);
+        log.info("Done with folder indexing. Found {} existing songs and {} new songs", fileInfoHolder.oldSongs, fileInfoHolder.newSongs);
+    }
 
-        Files.walkFileTree(path, new FileVisitor<>(){
+    private void iterateOverFiles(File directory, FileInfoHolder fileInfoHolder, String absoluteBasePath) {
 
-            @Override
-            public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) {
-                currentFolder[0] = upsertFolder(absoluteBasePath, dir);
-                // Force fetch
-                currentFolder[0].getSongs().size();
-                folderSongs[0] = currentFolder[0].getSongs();
-                return FileVisitResult.CONTINUE;
+        fileInfoHolder.currentFolder = upsertFolder(absoluteBasePath, directory.toPath());
+        fileInfoHolder.updateCurrentFolderSongs();
+
+        for (File file: directory.listFiles()) {
+            if (!file.isDirectory()) {
+                if (!isMusicFile(file.toPath())) continue;
+
+                boolean isNew = upsertSong(fileInfoHolder.currentFolder, fileInfoHolder.currentFolderSongs, absoluteBasePath, file.toPath());
+                fileInfoHolder.increment(isNew);
             }
+        }
 
-            @Override
-            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
-                if (!isMusicFile(file)) return FileVisitResult.CONTINUE;
-
-                boolean isNew = upsertSong(currentFolder[0], folderSongs[0], absoluteBasePath, file);
-                if (isNew) {
-                    newSong[0]++;} else {
-                    oldSong[0]++;}
-                return FileVisitResult.CONTINUE;
+        for (File file: directory.listFiles()) {
+            if (file.isDirectory()) {
+                iterateOverFiles(file, fileInfoHolder, absoluteBasePath);
             }
+        }
 
-            @Override
-            public FileVisitResult visitFileFailed(Path file, IOException exc) {
-                return FileVisitResult.CONTINUE;
-            }
-
-            @Override
-            public FileVisitResult postVisitDirectory(Path dir, IOException exc) {
-                return FileVisitResult.CONTINUE;
-            }
-        });
-        log.info("Done with folder indexing. Found {} existing songs and {} new songs", oldSong, newSong);
     }
 
     public Folder upsertFolder(String absoluteBasePath, Path path) {
@@ -196,5 +182,24 @@ public class SongDatabaseBuilder {
         String subString = absolutePath.substring(absoluteBasePath.length());
         if (!subString.isEmpty()) return subString.replaceAll("\\\\", "/");
         return "/";
+    }
+
+    private static class FileInfoHolder {
+        private Folder currentFolder;
+        private List<Song> currentFolderSongs;
+        private int oldSongs = 0;
+        private int newSongs = 0;
+
+        private void updateCurrentFolderSongs() {
+            this.currentFolderSongs = currentFolder.getSongs();
+        }
+
+        private void increment(boolean isNew) {
+            if (isNew) {
+                newSongs++;
+            } else {
+                oldSongs++;
+            }
+        }
     }
 }
