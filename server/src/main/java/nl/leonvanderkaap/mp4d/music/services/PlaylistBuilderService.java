@@ -25,10 +25,10 @@ public class PlaylistBuilderService {
 
     public String buildMultiFolderPlaylist(List<Integer> folderIds) {
         List<Folder> folders = songService.getFoldersByIds(folderIds);
-        List<Folder> nestedFolders = getNestedFolders(folders);
+        List<Folder> nestedFolders = getNestedFolders(folders).stream().sorted().toList();
         List<Song> songs = new ArrayList<>();
         for (Folder folder: nestedFolders) {
-            songs.addAll(folder.getSongs());
+            songs.addAll(folder.getSongs().stream().sorted().toList());
         }
         return buildPlaylist(songs);
     }

@@ -16,7 +16,8 @@ public class FolderTreeRecursiveDto {
     public FolderTreeRecursiveDto(Folder folder) {
         this.id = folder.getId();
         this.name = folder.getFolderName();
-        for(Folder subFolder: folder.getSubFolders()) {
+        List<Folder> sortedSubfolders = folder.getSubFolders().stream().sorted().toList();
+        for(Folder subFolder: sortedSubfolders) {
             children.add(new FolderTreeRecursiveDto(subFolder));
         }
     }
