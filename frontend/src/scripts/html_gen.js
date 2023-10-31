@@ -198,8 +198,11 @@ function process_dir_lists(dirs) {
         const play = document.createElement("td");
         play.appendChild(document.createTextNode("["));
         const play_link = document.createElement("a");
+        play_link.addEventListener("click", () => {
+            rest_get_with_name("/api/v1/folderplaylist/" + directory.id, directory.id + '.m3u8');
+        });
         play_link.textContent = "Play";
-        play_link.href = "/api/v1/folderplaylist/" + directory.id;
+        play_link.href = "#";
         play.appendChild(play_link);
         play.appendChild(document.createTextNode("]"));
         tr.appendChild(play);
