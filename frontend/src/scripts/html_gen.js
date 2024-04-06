@@ -87,8 +87,13 @@ function generate_subdirectories() {
     }
 }
 
+function set_subfolder(id) {
+    localStorage.setItem("folder", id);
+}
+
 function visit_subfolder(id) {
-    const fetch_string = id ? 'api/v1/folder?id=' + id : 'api/v1/folder'
+    let chosen_id = id ? id : localStorage.getItem("folder");
+    const fetch_string = chosen_id ? 'api/v1/folder?id=' + chosen_id : 'api/v1/folder'
     fetch(fetch_string).then(
         async (response)=> {
             const data = await response.json();
@@ -96,7 +101,8 @@ function visit_subfolder(id) {
             const dirs = data.subFolders;
             process_songs_list(songs);
             process_dir_lists(dirs);
-            init_breadcrumbs(id || '0');
+            init_breadcrumbs(chosen_id || '0');
+            set_subfolder(chosen_id || '0');
         }
     )
 }
@@ -112,6 +118,7 @@ function navigate_breadcrumb(id, index) {
             process_dir_lists(dirs);
             trim_breadcrumbs(index);
             setPlaylistUrl();
+            set_subfolder(id || '0');
         }
     )
 }
