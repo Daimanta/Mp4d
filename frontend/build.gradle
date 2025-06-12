@@ -1,13 +1,8 @@
-plugins {
-    id 'application'
-}
-
-application {
-
-}
 
 tasks.register('runTestServer') {
-    exec {
-        commandLine 'bun', 'run', 'http-server', 'src/', '-p', '8081', '-P', 'http://localhost:8080'
+    doLast {
+        exec {
+            commandLine 'bun', 'run', 'http-server', 'src/', '-p', '8081', '-P', 'http://localhost:8080'
+        }
     }
 }

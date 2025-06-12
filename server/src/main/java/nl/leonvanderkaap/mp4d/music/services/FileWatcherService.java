@@ -1,6 +1,6 @@
 package nl.leonvanderkaap.mp4d.music.services;
 
-import com.sun.nio.file.ExtendedWatchEventModifier;
+import io.methvin.watcher.DirectoryChangeListener;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,8 +12,10 @@ import java.io.IOException;
 import java.nio.file.*;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import io.methvin.watcher.DirectoryWatcher;
 
-import static java.nio.file.StandardWatchEventKinds.*;
+import static io.methvin.watcher.DirectoryChangeEvent.EventType.CREATE;
+import static io.methvin.watcher.DirectoryChangeEvent.EventType.DELETE;
 
 @Service
 @Slf4j
@@ -21,27 +23,23 @@ import static java.nio.file.StandardWatchEventKinds.*;
 public class FileWatcherService {
 
     private final ApplicationSettings applicationSettings;
-    private WatchService watcher;
+    private DirectoryWatcher watcher;
     private final SongDatabaseBuilder songDatabaseBuilder;
     private Lock lock = new ReentrantLock();
 
     @PostConstruct
     public void postConstruct() {
-        try {
-            watcher = FileSystems.getDefault().newWatchService();
-        } catch (IOException e) {
-            log.error("Could not instantiate watch service", e);
-            throw new RuntimeException(e);
-        }
-        WatchEvent.Kind<?>[] kinds = { ENTRY_CREATE, ENTRY_MODIFY, ENTRY_DELETE };
-
         Path dir = FileSystems.getDefault().getPath(applicationSettings.getBasepath());
+
         try {
-            dir.register(watcher, kinds, ExtendedWatchEventModifier.FILE_TREE);
+            watcher = DirectoryWatcher.builder()
+                    .path(dir)
+                    .listener(getListener())
+                    .build();
         } catch (IOException e) {
-            log.error("Could not instantiate watch service", e);
             throw new RuntimeException(e);
         }
+        log.info("Started file watcher");
     }
 
     @Scheduled(initialDelay = 5000, fixedDelay = 5000)
@@ -51,34 +49,26 @@ public class FileWatcherService {
         }
         while (true) {
             try {
-                WatchKey key = watcher.take();
-                for (WatchEvent<?> event : key.pollEvents()) {
-                    WatchEvent.Kind<?> kind = event.kind();
-                    if (kind == OVERFLOW) {
-                        continue;
-                    }
-                    WatchEvent<Path> ev = (WatchEvent<Path>) event;
-                    Path path = ev.context();
-                    String absolutePath = path.toAbsolutePath().toString();
-                    if (!absolutePath.endsWith("~")) {
-                        String kindName = kind.name();
-                        if (!path.toFile().isDirectory()) {
-                            if (kindName.equals("ENTRY_CREATE")) {
-                                songDatabaseBuilder.upsertPath(path);
-                            } else if (kindName.equals("ENTRY_DELETE")) {
-                                songDatabaseBuilder.deletePath(path);
-                            }
-                        }
-                    }
-                    boolean valid = key.reset();
-                    if (!valid) {
-                        break;
-                    }
-                }
-            } catch (InterruptedException e) {
+                watcher.watch();
+            } catch (Exception e) {
+                try {
+                    watcher.close();
+                } catch (IOException ex) {}
                 lock.unlock();
                 break;
             }
         }
     }
+
+    private DirectoryChangeListener getListener() {
+        return event -> {
+            Path relativePath = Path.of(event.path().toString().substring(event.rootPath().toString().length() + 1));
+            if (event.eventType() == CREATE) {
+                songDatabaseBuilder.upsertPath(relativePath);
+            } else if (event.eventType() == DELETE) {
+                songDatabaseBuilder.deletePath(relativePath);
+            }
+        };
+    };
+
 }
