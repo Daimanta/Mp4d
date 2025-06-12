@@ -47,6 +47,7 @@ bootJar {
 
     manifest {
         attributes 'Implementation-Gitcommit': getCheckedOutGitCommitHash()
+        attributes 'Implementation-Version': rootProject.version
     }
 }
 
