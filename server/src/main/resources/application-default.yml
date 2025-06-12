@@ -14,6 +14,11 @@
         }
       },
       "database-platform": "org.hibernate.community.dialect.SQLiteDialect"
+    },
+    "threads": {
+       "virtual": {
+          "enabled": true
+       }
     }
   }
 }

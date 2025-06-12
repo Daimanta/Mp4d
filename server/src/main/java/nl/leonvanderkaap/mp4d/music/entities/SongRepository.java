@@ -11,4 +11,7 @@ public interface SongRepository extends JpaRepository<Song, String> {
 
     @Query("SELECT s FROM Song s INNER JOIN Folder f ON s.folder = f WHERE s.name = :name AND f.path = :folderPath")
     Optional<Song> findByFolderPathAndName(String folderPath, String name);
+
+    @Query("SELECT s FROM Song s INNER JOIN Folder f ON s.folder = f WHERE f = :folder AND s.name = :filename")
+    Optional<Song> findByFolderAndFilename(Folder folder, String filename);
 }

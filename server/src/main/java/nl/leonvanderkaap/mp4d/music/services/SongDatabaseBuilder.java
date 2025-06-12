@@ -26,8 +26,10 @@ import java.nio.file.FileVisitor;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -74,7 +76,7 @@ public class SongDatabaseBuilder {
 
         FileInfoHolder fileInfoHolder = new FileInfoHolder();
         iterateOverFiles(path.toFile(), fileInfoHolder, absoluteBasePath);
-        log.info("Done with folder indexing. Found {} existing songs and {} new songs", fileInfoHolder.oldSongs, fileInfoHolder.newSongs);
+        log.info("Done with folder indexing. Found {} existing songs, {} new songs and deleted {} songs", fileInfoHolder.oldSongs, fileInfoHolder.newSongs, fileInfoHolder.deletedSongs);
     }
 
     private void iterateOverFiles(File directory, FileInfoHolder fileInfoHolder, String absoluteBasePath) {
@@ -82,14 +84,25 @@ public class SongDatabaseBuilder {
         fileInfoHolder.currentFolder = upsertFolder(absoluteBasePath, directory.toPath());
         fileInfoHolder.updateCurrentFolderSongs();
 
+        Set<String> fileNames = new HashSet<>();
+
         for (File file: directory.listFiles()) {
             if (!file.isDirectory()) {
                 if (!isMusicFile(file.toPath())) continue;
-
+                FileInformation fileInformation = new FileInformation(absoluteBasePath, file.toPath());
+                fileNames.add(fileInformation.getFileName());
                 boolean isNew = upsertSong(fileInfoHolder.currentFolder, fileInfoHolder.currentFolderSongs, absoluteBasePath, file.toPath());
                 fileInfoHolder.increment(isNew);
             }
         }
+
+        for (Song song: fileInfoHolder.currentFolderSongs) {
+            if (!fileNames.contains(song.getName())) {
+                songService.deleteSong(song);
+                fileInfoHolder.decrement();
+            }
+        }
+
 
         for (File file: directory.listFiles()) {
             if (file.isDirectory()) {
@@ -128,45 +141,81 @@ public class SongDatabaseBuilder {
         }
 
         if (matched == null) {
-            File file = path.toFile();
-            Integer bitrate = null;
-            Integer length = null;
-            Integer mtime = null;
-            int size = (int) file.length();
-            String artist = null;
-            String album = null;
-            Integer year = null;
-            String genre = null;
-            try {
-                AudioFile audioFile = AudioFileIO.read(path.toFile());
-                AudioHeader header = audioFile.getAudioHeader();
-                bitrate = (int) header.getBitRateAsNumber();
-                length = header.getTrackLength();
-                mtime = 0;
-                Tag tag = audioFile.getTag();
-                if (tag != null) {
-                    artist = tag.getFirst(FieldKey.ARTIST);
-                    album = tag.getFirst(FieldKey.ALBUM);
-                    try {
-                        year = Integer.parseInt(tag.getFirst(FieldKey.YEAR));
-                    } catch (Exception e) {}
-                    genre = tag.getFirst(FieldKey.GENRE);
-                }
-            } catch (CannotReadException e) {
-                throw new RuntimeException(e);
-            } catch (IOException|TagException|ReadOnlyFileException|InvalidAudioFrameException e) {
-                throw new RuntimeException(e);
-            }
-            if (artist != null && artist.isEmpty()) artist = null;
-            if (album != null && album.isEmpty()) album = null;
-            if (genre != null && genre.isEmpty()) genre = null;
-
-            Song song = new Song(folder, fileInformation.getFileName(), bitrate, length, mtime, size, artist, album, year, genre);
+            Song song = songPathToSong(path, folder, fileInformation.getFileName());
             songRepository.save(song);
             return true;
         } else {
             return false;
         }
+    }
+
+    private Song songPathToSong(Path path, Folder folder, String fileName) {
+        File file = path.toFile();
+        Integer bitrate = null;
+        Integer length = null;
+        Integer mtime = null;
+        int size = (int) file.length();
+        String artist = null;
+        String album = null;
+        Integer year = null;
+        String genre = null;
+        try {
+            AudioFile audioFile = AudioFileIO.read(file);
+            AudioHeader header = audioFile.getAudioHeader();
+            bitrate = (int) header.getBitRateAsNumber();
+            length = header.getTrackLength();
+            mtime = 0;
+            Tag tag = audioFile.getTag();
+            if (tag != null) {
+                artist = tag.getFirst(FieldKey.ARTIST);
+                album = tag.getFirst(FieldKey.ALBUM);
+                try {
+                    year = Integer.parseInt(tag.getFirst(FieldKey.YEAR));
+                } catch (Exception e) {}
+                genre = tag.getFirst(FieldKey.GENRE);
+            }
+        } catch (CannotReadException e) {
+            throw new RuntimeException(e);
+        } catch (IOException|TagException|ReadOnlyFileException|InvalidAudioFrameException e) {
+            throw new RuntimeException(e);
+        }
+        if (artist != null && artist.isEmpty()) artist = null;
+        if (album != null && album.isEmpty()) album = null;
+        if (genre != null && genre.isEmpty()) genre = null;
+
+        return new Song(folder, fileName, bitrate, length, mtime, size, artist, album, year, genre);
+    }
+
+    public boolean upsertPath(Path path) {
+        if (!isMusicFile(path)) return false;
+        String normalizedPath = path.toString().replace("\\", "/");
+        int lastSlash = normalizedPath.lastIndexOf("/");
+        String folderPath = lastSlash == -1 ? "/" : "/" + normalizedPath.substring(0, lastSlash);
+        String fileName = normalizedPath.substring(lastSlash + 1);
+        Folder folder = songService.upsertFolder(folderPath);
+        Optional<Song> songOpt = songService.getMatchingSong(fileName, folder);
+        if (songOpt.isPresent()) {
+            return false;
+        } else {
+            Song song = songPathToSong(Path.of(applicationSettings.getBasepath() + "/" + path.toString()), folder, fileName);
+            songRepository.save(song);
+            return true;
+        }
+    }
+
+    public boolean deletePath(Path path) {
+        if (!isMusicFile(path)) return false;
+        String normalizedPath = path.toString().replace("\\", "/");
+        int lastSlash = normalizedPath.lastIndexOf("/");
+        String folderPath = lastSlash == -1 ? "/" : "/" + normalizedPath.substring(0, lastSlash);
+        String fileName = normalizedPath.substring(lastSlash + 1);
+        Folder folder = songService.upsertFolder(folderPath);
+        Optional<Song> songOpt = songService.getMatchingSong(fileName, folder);
+        if  (songOpt.isPresent()) {
+            songService.deleteSong(songOpt.get());
+            return true;
+        }
+        return false;
     }
 
 
@@ -189,6 +238,7 @@ public class SongDatabaseBuilder {
         private List<Song> currentFolderSongs;
         private int oldSongs = 0;
         private int newSongs = 0;
+        private int deletedSongs = 0;
 
         private void updateCurrentFolderSongs() {
             this.currentFolderSongs = currentFolder.getSongs();
@@ -200,6 +250,10 @@ public class SongDatabaseBuilder {
             } else {
                 oldSongs++;
             }
+        }
+
+        private void decrement() {
+            deletedSongs++;
         }
     }
 }

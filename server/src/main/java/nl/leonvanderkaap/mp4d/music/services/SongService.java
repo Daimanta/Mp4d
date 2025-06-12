@@ -95,6 +95,10 @@ public class SongService {
         return songRepository.findByFolderPathAndName(stripPrefix(absoluteBasePath, fileInformation.directory), fileInformation.fileName);
     }
 
+    public Optional<Song> getMatchingSong(String songName, Folder folder) {
+        return songRepository.findByFolderAndFilename(folder, songName);
+    }
+
     public Optional<Folder> getMatchingFolder(String relativeDirectory) {
         return folderRepository.findByPath(relativeDirectory);
     }
@@ -115,6 +119,14 @@ public class SongService {
         }
         Folder folder = new Folder(relativeFolderPath, parent);
         return folderRepository.save(folder);
+    }
+
+    public Folder upsertFolder(String relativePath) {
+        Optional<Folder> folderOpt = getMatchingFolder(relativePath);
+        if (folderOpt.isPresent()) {
+            return folderOpt.get();
+        }
+        return null;
     }
 
     public String stripPrefix(String absoluteBasePath, String absolutePath) {
@@ -180,6 +192,10 @@ public class SongService {
 
     private static Predicate iLikePredicate(CriteriaBuilder criteriaBuilder, Root<?> root, String fieldname, String matcher) {
         return criteriaBuilder.like(criteriaBuilder.lower(root.get(fieldname)), String.format("%%%s%%", matcher));
+    }
+
+    public void deleteSong(Song song) {
+        songRepository.delete(song);
     }
 
     private class FileInformation {
